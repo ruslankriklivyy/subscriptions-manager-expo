@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 type ButtonTypes = 'main' | 'outlined';
 
@@ -7,7 +7,8 @@ interface IMainButtonProps {
   title: string;
   type?: ButtonTypes;
   backgroundColor?: string;
-  Icon?: any;
+  textColor?: string;
+  Icon?: ReactNode;
 
   onPress: () => void;
 }
@@ -17,6 +18,7 @@ export const MainButton: FC<IMainButtonProps> = ({
   Icon,
   type = 'main',
   backgroundColor,
+  textColor,
   onPress,
 }) => {
   if (type === 'main') {
@@ -26,7 +28,7 @@ export const MainButton: FC<IMainButtonProps> = ({
         activeOpacity={0.8}
         onPress={onPress}
       >
-        <Text style={styles.btnTitle}>{title}</Text>
+        <Text style={{ ...styles.btnTitle, color: textColor ?? '#fff' }}>{title}</Text>
       </TouchableOpacity>
     );
   }
@@ -39,7 +41,7 @@ export const MainButton: FC<IMainButtonProps> = ({
         onPress={onPress}
       >
         {Icon && <View style={styles.btnIcon}>{Icon}</View>}
-        <Text style={styles.btnTitleOutlined}>{title}</Text>
+        <Text style={{ ...styles.btnTitleOutlined, color: textColor ?? '#000' }}>{title}</Text>
       </TouchableOpacity>
     );
   }

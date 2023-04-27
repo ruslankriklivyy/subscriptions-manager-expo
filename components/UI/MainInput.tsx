@@ -5,13 +5,17 @@ import {
   TextInputFocusEventData,
   Text,
   View,
+  KeyboardTypeOptions,
 } from 'react-native';
 import { FC } from 'react';
+import { MainLabel } from './MainLabel';
 
 interface IMainInputProps {
   isError?: boolean;
   isImportant?: boolean;
   isSecureTextEntry?: boolean;
+  isMultiline?: boolean;
+  keyboardType?: KeyboardTypeOptions;
   placeholder?: string;
   value?: string;
   label?: string;
@@ -24,24 +28,30 @@ export const MainInput: FC<IMainInputProps> = ({
   isError,
   isImportant,
   isSecureTextEntry,
+  isMultiline = false,
+  keyboardType = 'default',
   value,
   label,
   placeholder,
   onBlur,
   onChangeText,
 }) => {
+  let inputStyles: any = !isError ? styles.input : styles.inputError;
+
+  if (isMultiline) {
+    inputStyles = { ...inputStyles, textAlignVertical: 'top', height: 80 };
+  }
+
   return (
     <>
-      {label && (
-        <View style={styles.labelBox}>
-          <Text style={styles.label}>{label}</Text>
-          {isImportant && <Text>*</Text>}
-        </View>
-      )}
+      {label && <MainLabel label={label} isImportant={isImportant} />}
 
       <TextInput
-        style={!isError ? styles.input : styles.inputError}
+        style={inputStyles}
         secureTextEntry={isSecureTextEntry}
+        multiline={isMultiline}
+        numberOfLines={4}
+        keyboardType={keyboardType}
         placeholder={placeholder}
         onBlur={onBlur}
         onChangeText={onChangeText}
@@ -61,6 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontFamily: 'Poppins-Medium',
     fontWeight: '500',
+    height: 52,
   },
   inputError: {
     paddingVertical: 10,
@@ -72,12 +83,4 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontWeight: '500',
   },
-  label: {
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 2,
-  },
-  labelBox: {
-    flexDirection: 'row',
-  },
-  labelImportant: {},
 });

@@ -8,7 +8,8 @@ import { FormSocials } from '../../components/UI/FormSocials';
 import { MainInput } from '../../components/UI/MainInput';
 import { FormErrorMessage } from '../../components/UI/FormErrorMessage';
 import { MainButton } from '../../components/UI/MainButton';
-import { authStyles } from './auth.styles';
+import { AuthStyles } from './auth.styles';
+import { FormStyles } from '../../styles/FormStyles';
 
 interface ISignInFormValues {
   email: string;
@@ -44,13 +45,13 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<SignInValidationSchema> = async (values: ISignInFormValues) => {};
 
   return (
-    <View style={authStyles.box}>
-      <Text style={authStyles.title}>Sign In</Text>
+    <View style={AuthStyles.box}>
+      <Text style={FormStyles.title}>Sign In</Text>
 
       <View>
         <FormSocials />
 
-        <View style={authStyles.formControl}>
+        <View style={FormStyles.formControl}>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
@@ -70,7 +71,7 @@ const SignIn = () => {
           {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
         </View>
 
-        <View style={authStyles.formControl}>
+        <View style={FormStyles.formControl}>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
@@ -90,14 +91,14 @@ const SignIn = () => {
           {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
         </View>
 
-        <View style={authStyles.formActions}>
+        <View style={FormStyles.formActions}>
           <MainButton title={'Send'} backgroundColor={'#004EEC'} onPress={handleSubmit(onSubmit)} />
 
-          <View style={authStyles.linkToSingIn}>
-            <Text style={authStyles.text}>Are you not have an account?</Text>
+          <View style={AuthStyles.linkToSingIn}>
+            <Text style={AuthStyles.text}>Are you not have an account?</Text>
 
             <Pressable onPress={() => router.push('/home')}>
-              <Text style={authStyles.link}>Sign Up</Text>
+              <Text style={AuthStyles.link}>Sign Up</Text>
             </Pressable>
           </View>
         </View>

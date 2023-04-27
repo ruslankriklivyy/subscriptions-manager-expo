@@ -1,6 +1,8 @@
-import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import { EvilIcons } from '@expo/vector-icons';
 import { useState } from 'react';
+
+import { AddForm } from './AddForm';
 
 export const AddBlock = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -12,7 +14,7 @@ export const AddBlock = () => {
         style={styles.addBtn}
         onPress={() => setIsModalVisible(true)}
       >
-        <AntDesign name="pluscircleo" size={38} color="black" />
+        <EvilIcons name="plus" size={50} color="black" />
       </TouchableOpacity>
 
       <Modal
@@ -21,7 +23,7 @@ export const AddBlock = () => {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(!isModalVisible)}
       >
-        <Text>1223</Text>
+        <AddForm onClose={() => setIsModalVisible(false)} />
       </Modal>
     </>
   );
@@ -29,7 +31,7 @@ export const AddBlock = () => {
 
 const styles = StyleSheet.create({
   addBtn: {
-    width: 38,
-    height: 38,
+    width: 50,
+    height: 50,
   },
 });

@@ -8,7 +8,8 @@ import { MainInput } from '../../components/UI/MainInput';
 import { FormErrorMessage } from '../../components/UI/FormErrorMessage';
 import { FormSocials } from '../../components/UI/FormSocials';
 import { MainButton } from '../../components/UI/MainButton';
-import { authStyles } from './auth.styles';
+import { AuthStyles } from './auth.styles';
+import { FormStyles } from '../../styles/FormStyles';
 
 interface ISignUpFormValues {
   email: string;
@@ -52,13 +53,13 @@ const SignUpScreen = () => {
   const onSubmit: SubmitHandler<SignUpValidationSchema> = async (values: ISignUpFormValues) => {};
 
   return (
-    <View style={authStyles.box}>
-      <Text style={authStyles.title}>Sign Up</Text>
+    <View style={AuthStyles.box}>
+      <Text style={FormStyles.title}>Sign Up</Text>
 
       <View>
         <FormSocials />
 
-        <View style={authStyles.formControl}>
+        <View style={FormStyles.formControl}>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
@@ -78,7 +79,7 @@ const SignUpScreen = () => {
           {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
         </View>
 
-        <View style={authStyles.formControl}>
+        <View style={FormStyles.formControl}>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
@@ -98,7 +99,7 @@ const SignUpScreen = () => {
           {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
         </View>
 
-        <View style={authStyles.formControl}>
+        <View style={FormStyles.formControl}>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
@@ -120,14 +121,14 @@ const SignUpScreen = () => {
           )}
         </View>
 
-        <View style={authStyles.formActions}>
+        <View style={FormStyles.formActions}>
           <MainButton title={'Send'} backgroundColor={'#004EEC'} onPress={handleSubmit(onSubmit)} />
 
-          <View style={authStyles.linkToSingIn}>
-            <Text style={authStyles.text}>Do you already have account?</Text>
+          <View style={AuthStyles.linkToSingIn}>
+            <Text style={AuthStyles.text}>Do you already have account?</Text>
 
             <Pressable onPress={() => router.push('/auth/signin')}>
-              <Text style={authStyles.link}>Sign In</Text>
+              <Text style={AuthStyles.link}>Sign In</Text>
             </Pressable>
           </View>
         </View>
