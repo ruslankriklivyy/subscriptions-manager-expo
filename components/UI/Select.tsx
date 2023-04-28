@@ -16,8 +16,8 @@ export const Select: FC<ISelectProps> = ({ value, onChange }) => {
         selectedValue={value}
         onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
       >
-        <Picker.Item style={styles.pickerItem} label="Java" value="java" />
-        <Picker.Item style={styles.pickerItem} label="JavaScript" value="js" />
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
       </Picker>
     </View>
   );
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     fontFamily: 'Poppins-Regular',
+    height: 34,
   },
   box: {
     borderStyle: 'solid',

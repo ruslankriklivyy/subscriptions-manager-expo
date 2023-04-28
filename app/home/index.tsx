@@ -1,20 +1,20 @@
 import { StyleSheet, View } from 'react-native';
 
 import { User } from '../../components/user';
-import { AddBlock } from '../../components/subscrptions/AddBlock';
-import { Total } from '../../components/UI/Total';
+import { SubscriptionAddBlock } from '../../components/subscrptions/SubscriptionAddBlock';
+import { TotalCard } from '../../components/UI/TotalCard';
 import Subscriptions from '../../components/subscrptions';
 
 const Home = () => {
   return (
     <View style={styles.box}>
       <View style={styles.top}>
-        <User fullName={'Test User'} />
-        <AddBlock />
+        <User fullName={'Ruslan'} />
+        <SubscriptionAddBlock />
       </View>
 
       <View style={styles.content}>
-        <Total total={180} />
+        <TotalCard total={180} />
 
         <Subscriptions
           items={[

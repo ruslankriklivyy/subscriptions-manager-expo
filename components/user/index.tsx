@@ -1,5 +1,6 @@
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { FC } from 'react';
+import { useRouter } from 'expo-router';
 
 interface IUserProps {
   fullName: string;
@@ -7,14 +8,19 @@ interface IUserProps {
 }
 
 export const User: FC<IUserProps> = ({ fullName, avatarUrl }) => {
+  const router = useRouter();
   const userAvatarSource = avatarUrl ? { uri: avatarUrl } : require('../../assets/avatar.png');
 
   return (
-    <View style={styles.user}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={styles.user}
+      onPress={() => router.push('/profile')}
+    >
       <Image style={styles.userAvatar} source={userAvatarSource} />
 
       <Text style={styles.userFullName}>{fullName}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

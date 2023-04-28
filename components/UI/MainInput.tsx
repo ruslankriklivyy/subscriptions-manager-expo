@@ -3,8 +3,6 @@ import {
   StyleSheet,
   TextInput,
   TextInputFocusEventData,
-  Text,
-  View,
   KeyboardTypeOptions,
 } from 'react-native';
 import { FC } from 'react';
@@ -50,7 +48,7 @@ export const MainInput: FC<IMainInputProps> = ({
         style={inputStyles}
         secureTextEntry={isSecureTextEntry}
         multiline={isMultiline}
-        numberOfLines={4}
+        numberOfLines={isMultiline ? 4 : 1}
         keyboardType={keyboardType}
         placeholder={placeholder}
         onBlur={onBlur}

@@ -49,7 +49,7 @@ const defaultValues: ICreateSubscriptionFormValues = {
   icon: {},
 };
 
-export const AddForm: FC<IAddFormProps> = ({ onClose }) => {
+export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
   const {
     control,
     handleSubmit,
