@@ -1,4 +1,13 @@
-import { Image, StyleSheet, View, Text, LayoutAnimation, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  LayoutAnimation,
+  TouchableOpacity,
+  Platform,
+  UIManager,
+} from 'react-native';
 import { FC, useState } from 'react';
 
 import { ISubscription } from '../../types/entities/Subscription';
@@ -6,6 +15,12 @@ import { ExpandedSubscriptionItem } from './ExpandedSubscriptionItem';
 
 interface ISubscriptionItemProps {
   subscription: ISubscription;
+}
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 }
 
 export const SubscriptionItem: FC<ISubscriptionItemProps> = ({ subscription }) => {
