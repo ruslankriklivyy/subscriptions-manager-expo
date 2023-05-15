@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   userAvatar: {
     width: 34,
     height: 34,
-    marginRight: 5,
+    marginRight: 10,
     borderRadius: 100,
   },
   userFullName: {

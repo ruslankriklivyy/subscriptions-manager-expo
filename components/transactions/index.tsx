@@ -4,13 +4,15 @@ import { FC } from 'react';
 import { ITransaction } from '../../types/entities/Transaction';
 import { TransactionItem } from './TransactionItem';
 import { AddTransactionBlock } from './TransactionAddBlock';
+import { Loader } from '../UI/Loader';
 
 interface ITransactionsProps {
   transactions: ITransaction[];
+  isLoading?: boolean;
   withoutCreate?: boolean;
 }
 
-const Transactions: FC<ITransactionsProps> = ({ transactions, withoutCreate }) => {
+const Transactions: FC<ITransactionsProps> = ({ transactions, isLoading, withoutCreate }) => {
   return (
     <View style={styles.transactionsBox}>
       <View style={styles.transactionsTop}>
@@ -19,13 +21,17 @@ const Transactions: FC<ITransactionsProps> = ({ transactions, withoutCreate }) =
         {!withoutCreate && <AddTransactionBlock />}
       </View>
 
-      <View style={styles.transactions}>
+      {isLoading && <Loader />}
+
+      {!isLoading && (
         <FlatList
           data={transactions}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => <TransactionItem transaction={item} />}
           keyExtractor={(item) => item.id}
         />
-      </View>
+      )}
     </View>
   );
 };
@@ -35,6 +41,7 @@ export default Transactions;
 const styles = StyleSheet.create({
   transactionsBox: {
     marginTop: 20,
+    height: 300,
   },
   transactionsTop: {
     flexDirection: 'row',

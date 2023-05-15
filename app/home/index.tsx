@@ -1,36 +1,46 @@
 import { StyleSheet, View } from 'react-native';
+import { useStore } from 'effector-react';
+import { useEffect, useState } from 'react';
 
 import { User } from '../../components/user';
 import { SubscriptionAddBlock } from '../../components/subscrptions/SubscriptionAddBlock';
 import { TotalCard } from '../../components/UI/TotalCard';
 import Subscriptions from '../../components/subscrptions';
+import { $user } from '../../stores/UserStore';
+import { $subscriptions, fetchSubscriptionsFx } from '../../stores/SubscriptionStore';
+import { Loader } from '../../components/UI/Loader';
+import { $totalExpenses, countTotalExpenses } from '../../stores/StatisticStore';
 
 const Home = () => {
+  const [pagesOffset, setPagesOffset] = useState<number>(0);
+
+  const user = useStore($user);
+  const subscriptions = useStore($subscriptions);
+  const totalExpenses = useStore($totalExpenses);
+  const isSubscriptionsLoading = useStore(fetchSubscriptionsFx.pending);
+
+  useEffect(() => {
+    user && fetchSubscriptionsFx({ userId: user.id, offset: pagesOffset, perPage: 4 });
+  }, [user, pagesOffset]);
+
+  useEffect(() => {
+    countTotalExpenses();
+  }, []);
+
+  if (!user) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.box}>
       <View style={styles.top}>
-        <User fullName={'Ruslan'} />
+        <User avatarUrl={user?.avatar?.url} fullName={user?.full_name || user?.email} />
         <SubscriptionAddBlock />
       </View>
 
-      <View style={styles.content}>
-        <TotalCard total={180} />
+      <TotalCard total={totalExpenses} />
 
-        <Subscriptions
-          items={[
-            {
-              id: '1',
-              name: 'Spotify',
-              description: 'Some big description about subscription',
-              price: '12',
-              pay_date: '12.12.2023',
-              pay_plan: 'Premium',
-              color: '#F7D44C',
-              icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/1982px-Spotify_icon.svg.png',
-            },
-          ]}
-        />
-      </View>
+      <Subscriptions items={subscriptions} isLoading={isSubscriptionsLoading} />
     </View>
   );
 };
@@ -49,5 +59,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  content: {},
 });

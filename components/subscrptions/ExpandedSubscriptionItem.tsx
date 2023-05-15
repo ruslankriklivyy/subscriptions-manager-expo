@@ -1,10 +1,12 @@
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { FC } from 'react';
 
 import { MainButton } from '../UI/MainButton';
 import { ISubscription } from '../../types/entities/Subscription';
+import { deleteSubscriptionFx } from '../../stores/SubscriptionStore';
+import { formatDate } from '../../utils/format-date';
 
 interface IExpandedSubscriptionItemProps {
   isView?: boolean;
@@ -19,6 +21,11 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
 }) => {
   const router = useRouter();
 
+  const onDelete = async () => {
+    await deleteSubscriptionFx({ id: subscription.id, iconUrl: subscription?.icon?.url });
+    router.push('/home');
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -31,7 +38,12 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
     >
       <View style={styles.expandedSubscriptionItemTop}>
         <View style={styles.expandedSubscriptionItemLeft}>
-          <Image source={{ uri: subscription.icon }} style={styles.expandedSubscriptionItemIcon} />
+          {subscription?.icon?.url && (
+            <Image
+              source={{ uri: subscription.icon.url }}
+              style={styles.expandedSubscriptionItemIcon}
+            />
+          )}
 
           <View style={styles.expandedSubscriptionItemInfo}>
             <Text style={styles.subscriptionItemName}>{subscription.name}</Text>
@@ -39,23 +51,21 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
           </View>
         </View>
 
-        <View style={styles.expandedSubscriptionItemRight}>
-          <Text style={styles.subscriptionItemPrice}>${subscription.price}</Text>
-        </View>
+        <Text style={styles.subscriptionItemPrice}>${subscription.price}</Text>
       </View>
 
-      <View style={styles.expandedSubscriptionItemContent}>
-        <View style={styles.expandedSubscriptionItemField}>
-          <Text style={styles.expandedSubscriptionItemFieldName}>Description</Text>
+      <View style={styles.expandedSubscriptionItemField}>
+        <Text style={styles.expandedSubscriptionItemFieldName}>Description</Text>
 
-          <Text style={styles.expandedSubscriptionItemFieldValue}>{subscription.description}</Text>
-        </View>
+        <Text style={styles.expandedSubscriptionItemFieldValue}>{subscription.description}</Text>
+      </View>
 
-        <View style={styles.expandedSubscriptionItemField}>
-          <Text style={styles.expandedSubscriptionItemFieldName}>Pay date</Text>
+      <View style={styles.expandedSubscriptionItemField}>
+        <Text style={styles.expandedSubscriptionItemFieldName}>Pay date</Text>
 
-          <Text style={styles.expandedSubscriptionItemFieldValue}>{subscription.pay_date}</Text>
-        </View>
+        <Text style={styles.expandedSubscriptionItemFieldValue}>
+          {formatDate(subscription.pay_date)}
+        </Text>
       </View>
 
       <View style={styles.expandedSubscriptionItemBottom}>
@@ -83,9 +93,9 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
           )}
         </View>
 
-        <Pressable style={styles.removeSubscription}>
+        <TouchableOpacity activeOpacity={0.7} style={styles.removeSubscription} onPress={onDelete}>
           <MaterialIcons name="delete" size={27} color="white" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -95,6 +105,7 @@ const styles = StyleSheet.create({
   expandedSubscriptionItem: {
     padding: 20,
     borderRadius: 8,
+    marginBottom: 20,
   },
   expandedSubscriptionItemTop: {
     marginBottom: 20,
@@ -116,8 +127,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontWeight: '400',
   },
-  expandedSubscriptionItemRight: {},
-  expandedSubscriptionItemContent: {},
   expandedSubscriptionItemField: {
     flexDirection: 'row',
     alignItems: 'flex-start',

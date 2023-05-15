@@ -1,15 +1,18 @@
-import { StyleSheet, View, Text, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { FC } from 'react';
 
 import { ISubscription } from '../../types/entities/Subscription';
 import { SubscriptionItem } from './SubscriptionItem';
 import { Select } from '../UI/Select';
+import { EmptySubscriptions } from './EmptySubscriptions';
+import { Loader } from '../UI/Loader';
 
 interface ISubscriptionsProps {
   items: ISubscription[];
+  isLoading: boolean;
 }
 
-const Subscriptions: FC<ISubscriptionsProps> = ({ items }) => {
+const Subscriptions: FC<ISubscriptionsProps> = ({ items, isLoading }) => {
   return (
     <View style={styles.subscriptions}>
       <View style={styles.top}>
@@ -18,13 +21,20 @@ const Subscriptions: FC<ISubscriptionsProps> = ({ items }) => {
         <Select onChange={() => null} value={'Java'} />
       </View>
 
-      <SafeAreaView style={styles.content}>
-        <FlatList
-          data={items}
-          renderItem={({ item }) => <SubscriptionItem subscription={item} />}
-          keyExtractor={(item) => item.id}
-        />
-      </SafeAreaView>
+      <View style={styles.contentContainer}>
+        {isLoading && <Loader />}
+
+        {!isLoading && (
+          <FlatList
+            data={items}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => <SubscriptionItem subscription={item} />}
+            ListEmptyComponent={EmptySubscriptions}
+            keyExtractor={(item) => item.id}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -46,5 +56,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 18,
   },
-  content: {},
+  contentContainer: {
+    height: '78%',
+  },
 });

@@ -1,6 +1,7 @@
-import { Modal, Pressable, StyleSheet, View, Text } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text } from 'react-native';
 import { FC, useState } from 'react';
 import { ColorPicker } from 'react-native-color-picker';
+
 import { MainLabel } from './MainLabel';
 
 interface IControlColorProps {

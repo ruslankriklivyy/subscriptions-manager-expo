@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
 import { FC, ReactNode } from 'react';
 
 type ButtonTypes = 'main' | 'outlined';
@@ -9,6 +9,8 @@ interface IMainButtonProps {
   backgroundColor?: string;
   textColor?: string;
   Icon?: ReactNode;
+  disabled?: boolean;
+  isLoading?: boolean;
 
   onPress: () => void;
 }
@@ -19,16 +21,30 @@ export const MainButton: FC<IMainButtonProps> = ({
   type = 'main',
   backgroundColor,
   textColor,
+  disabled = false,
+  isLoading = false,
   onPress,
 }) => {
   if (type === 'main') {
     return (
       <TouchableOpacity
+        disabled={disabled || isLoading}
         style={{ ...styles.btn, backgroundColor: backgroundColor ?? '#000' }}
         activeOpacity={0.8}
         onPress={onPress}
       >
-        <Text style={{ ...styles.btnTitle, color: textColor ?? '#fff' }}>{title}</Text>
+        {isLoading && backgroundColor && (
+          <Image style={styles.loadingGif} source={require('../../assets/icons/loading.gif')} />
+        )}
+        {isLoading && !backgroundColor && (
+          <Image
+            style={styles.loadingGif}
+            source={require('../../assets/icons/loading-white.gif')}
+          />
+        )}
+        {!isLoading && (
+          <Text style={{ ...styles.btnTitle, color: textColor ?? '#fff' }}>{title}</Text>
+        )}
       </TouchableOpacity>
     );
   }
@@ -36,6 +52,7 @@ export const MainButton: FC<IMainButtonProps> = ({
   if (type === 'outlined') {
     return (
       <TouchableOpacity
+        disabled={disabled || isLoading}
         style={{ ...styles.btnOutlined, backgroundColor }}
         activeOpacity={0.8}
         onPress={onPress}
@@ -52,6 +69,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     padding: 10,
     borderRadius: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   btnOutlined: {
     padding: 10,
@@ -79,5 +99,9 @@ const styles = StyleSheet.create({
   },
   btnIcon: {
     marginRight: 10,
+  },
+  loadingGif: {
+    width: 34,
+    height: 34,
   },
 });

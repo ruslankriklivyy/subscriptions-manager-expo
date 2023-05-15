@@ -6,6 +6,7 @@ import {
   KeyboardTypeOptions,
 } from 'react-native';
 import { FC } from 'react';
+
 import { MainLabel } from './MainLabel';
 
 interface IMainInputProps {

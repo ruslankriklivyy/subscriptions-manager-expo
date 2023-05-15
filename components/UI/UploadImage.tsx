@@ -1,16 +1,17 @@
 import { StyleSheet, View, Image, Pressable, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 
 import { MainLabel } from './MainLabel';
 
 interface IUploadImageProps {
   onChange: (file: any) => void;
+  defaultValue?: any;
   label?: string;
 }
 
-export const UploadImage: FC<IUploadImageProps> = ({ onChange, label }) => {
+export const UploadImage: FC<IUploadImageProps> = ({ onChange, label, defaultValue }) => {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
@@ -20,6 +21,7 @@ export const UploadImage: FC<IUploadImageProps> = ({ onChange, label }) => {
       allowsMultipleSelection: false,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
@@ -27,6 +29,12 @@ export const UploadImage: FC<IUploadImageProps> = ({ onChange, label }) => {
       setImage(result.assets[0].uri);
     }
   };
+
+  useEffect(() => {
+    if (defaultValue) {
+      setImage(defaultValue.url);
+    }
+  }, [defaultValue]);
 
   return (
     <View style={styles.box}>
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
   pickImageText: {
     fontFamily: 'Poppins-Medium',
     fontWeight: '500',
-    fontSize: 16,
+    fontSize: 14,
     opacity: 0.4,
   },
   image: {

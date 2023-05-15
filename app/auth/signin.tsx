@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
+import { useStore } from 'effector-react';
 
 import { FormSocials } from '../../components/UI/FormSocials';
 import { MainInput } from '../../components/UI/MainInput';
@@ -10,6 +11,7 @@ import { FormErrorMessage } from '../../components/UI/FormErrorMessage';
 import { MainButton } from '../../components/UI/MainButton';
 import { AuthStyles } from './auth.styles';
 import { FormStyles } from '../../styles/FormStyles';
+import { signInFx } from '../../stores/AuthStore';
 
 interface ISignInFormValues {
   email: string;
@@ -41,8 +43,16 @@ const SignIn = () => {
     resolver: zodResolver(signInValidationSchema),
   });
   const router = useRouter();
+  const isLoading = useStore(signInFx.pending);
 
-  const onSubmit: SubmitHandler<SignInValidationSchema> = async (values: ISignInFormValues) => {};
+  const onSubmit: SubmitHandler<SignInValidationSchema> = async (values: ISignInFormValues) => {
+    try {
+      await signInFx({ email: values.email, password: values.password });
+      router.push('/home');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={AuthStyles.box}>
@@ -57,7 +67,6 @@ const SignIn = () => {
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <MainInput
                 isImportant
-                isSecureTextEntry
                 value={value}
                 isError={!!error}
                 label={'Email'}
@@ -92,7 +101,12 @@ const SignIn = () => {
         </View>
 
         <View style={FormStyles.formActions}>
-          <MainButton title={'Send'} backgroundColor={'#004EEC'} onPress={handleSubmit(onSubmit)} />
+          <MainButton
+            isLoading={isLoading}
+            title={'Send'}
+            backgroundColor={'#004EEC'}
+            onPress={handleSubmit(onSubmit)}
+          />
 
           <View style={AuthStyles.linkToSingIn}>
             <Text style={AuthStyles.text}>Are you not have an account?</Text>

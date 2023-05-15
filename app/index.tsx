@@ -26,13 +26,9 @@ export default function Page() {
 const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
   },
   box: {
     flex: 1,
-    height: '100%',
-    width: '100%',
     position: 'relative',
   },
   bottomBox: {

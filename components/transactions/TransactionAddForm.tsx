@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FC } from 'react';
+import { useStore } from 'effector-react';
+import moment from 'moment';
 
 import { FormStyles } from '../../styles/FormStyles';
 import { MainInput } from '../UI/MainInput';
@@ -10,14 +12,19 @@ import { FormErrorMessage } from '../UI/FormErrorMessage';
 import { DatePicker } from '../UI/DatePicker';
 import { MainButton } from '../UI/MainButton';
 import { MainHeader } from '../UI/MainHeader';
+import { createTransactionFx, fetchTransactionsFx } from '../../stores/TransactionStore';
+import { $subscription } from '../../stores/SubscriptionStore';
+import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 
 interface ITransactionAddFormProps {
   onClose: () => void;
 }
 
-interface ICreateTransactionFormValues {
+export interface ICreateTransactionFormValues {
   date: Date;
+  date_statistic: ITransactionDateStatistic;
   price: string;
+  subscription_id: string;
 }
 
 const createTransactionValidationSchema = z.object({
@@ -30,6 +37,8 @@ type CreateTransactionValidationSchema = z.infer<typeof createTransactionValidat
 const defaultValues: ICreateTransactionFormValues = {
   price: '',
   date: new Date(),
+  date_statistic: null,
+  subscription_id: '',
 };
 
 export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) => {
@@ -41,10 +50,21 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
     defaultValues,
     resolver: zodResolver(createTransactionValidationSchema),
   });
+  const subscription = useStore($subscription);
+  const isLoading = useStore(createTransactionFx.pending);
 
   const onSubmit: SubmitHandler<CreateTransactionValidationSchema> = async (
     values: ICreateTransactionFormValues
   ) => {
+    await createTransactionFx({
+      ...values,
+      subscription_id: subscription.id,
+      date_statistic: {
+        month_index: moment(values.date).month(),
+        year: moment(values.date).year(),
+      },
+    });
+    await fetchTransactionsFx(subscription.id);
     onClose();
   };
 
@@ -60,7 +80,6 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <MainInput
                   isImportant
-                  isSecureTextEntry
                   value={value}
                   isError={!!error}
                   keyboardType={'numeric'}
@@ -88,6 +107,7 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
 
           <View style={FormStyles.formActions}>
             <MainButton
+              isLoading={isLoading}
               title={'Create'}
               backgroundColor={'#33d71e'}
               textColor={'#000'}

@@ -1,45 +1,68 @@
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { useSearchParams } from 'expo-router';
+import { useStore } from 'effector-react';
+import { useEffect } from 'react';
+import moment from 'moment';
 
 import { MainHeader } from '../../components/UI/MainHeader';
 import { ExpandedSubscriptionItem } from '../../components/subscrptions/ExpandedSubscriptionItem';
 import Transactions from '../../components/transactions';
+import { $subscription, fetchSubscriptionFx } from '../../stores/SubscriptionStore';
+import { Loader } from '../../components/UI/Loader';
+import {
+  $totalExpenses,
+  $transactions,
+  countTotalExpenses,
+  fetchTransactionsFx,
+} from '../../stores/TransactionStore';
+import { FORMAT_DATE_PARSE } from '../../config/consts';
 
 const Subscription = () => {
+  const totalExpenses = useStore($totalExpenses);
+  const transactions = useStore($transactions);
+  const subscription = useStore($subscription);
+  const isSubscriptionsLoading = useStore(fetchSubscriptionFx.pending);
+  const isTransactionsLoading = useStore(fetchTransactionsFx.pending);
+
   const searchParams = useSearchParams();
+  const nowDate = moment().format(FORMAT_DATE_PARSE);
+
+  useEffect(() => {
+    fetchSubscriptionFx(searchParams?.id as string);
+    fetchTransactionsFx(searchParams?.id as string);
+  }, [searchParams?.id]);
+
+  useEffect(() => {
+    countTotalExpenses(transactions);
+  }, [transactions]);
 
   return (
     <SafeAreaView style={styles.box}>
-      <MainHeader title={'Subscription'} />
+      {isSubscriptionsLoading && <Loader />}
 
-      <View style={styles.content}>
-        <ExpandedSubscriptionItem
-          subscription={{
-            id: '1',
-            name: 'Spotify',
-            description: 'Some big description about subscription',
-            price: '12',
-            pay_date: '12.12.2023',
-            pay_plan: 'Premium',
-            color: '#F7D44C',
-            icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/1982px-Spotify_icon.svg.png',
-          }}
-        />
+      {!isSubscriptionsLoading && subscription && (
+        <>
+          <MainHeader title={'Subscription'} />
 
-        <View style={styles.expenses}>
-          <View style={styles.expensesLeft}>
-            <Text style={styles.expensesTitle}>Expenses</Text>
+          <View style={styles.content}>
+            {subscription && <ExpandedSubscriptionItem subscription={subscription} />}
 
-            <Text style={styles.expensesDate}>12.12.2023</Text>
+            <View style={styles.expenses}>
+              <View style={styles.expensesLeft}>
+                <Text style={styles.expensesTitle}>Expenses</Text>
+
+                <Text style={styles.expensesDate}>{nowDate}</Text>
+              </View>
+
+              <View style={styles.expensesRight}>
+                <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+              </View>
+            </View>
+
+            <Transactions isLoading={isTransactionsLoading} transactions={transactions} />
           </View>
-
-          <View style={styles.expensesRight}>
-            <Text style={styles.expensesTotal}>-$1240.40</Text>
-          </View>
-        </View>
-
-        <Transactions transactions={[{ id: '1', date: '12.12.2023', price: 12 }]} />
-      </View>
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -52,7 +75,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flex: 1,
   },
-  content: {},
+  content: {
+    paddingTop: 20,
+  },
   expenses: {
     marginTop: 20,
     flexDirection: 'row',

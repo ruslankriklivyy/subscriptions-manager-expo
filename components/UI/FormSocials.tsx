@@ -1,15 +1,36 @@
-import { MainButton } from './MainButton';
 import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import * as WebBrowser from 'expo-web-browser';
+import { useAuthRequest } from 'expo-auth-session/providers/google';
+import Constants from 'expo-constants';
+
+import { MainButton } from './MainButton';
+import AuthService from '../../services/AuthService';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export const FormSocials = () => {
+  const [request, response, promptAsync] = useAuthRequest({
+    androidClientId: Constants?.expoConfig?.extra?.FIREBASE_ANDROID_CLIENT_ID,
+    expoClientId: Constants?.expoConfig?.extra?.GOOGLE_AUTH_CLIENT_ID,
+    iosClientId: Constants?.expoConfig?.extra?.GOOGLE_AUTH_IOS_CLIENT_ID,
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      AuthService.googleAuth(response.authentication.accessToken);
+    }
+  }, [response]);
+
   return (
-    <View style={styles.socials}>
+    <>
       <MainButton
+        disabled={!request}
         title={'Sign up with Google'}
         type={'outlined'}
         Icon={<AntDesign name="google" size={26} />}
-        onPress={() => null}
+        onPress={() => promptAsync()}
       />
 
       <View style={styles.socialsBottom}>
@@ -17,12 +38,11 @@ export const FormSocials = () => {
         <Text style={styles.socialsBottomText}>OR</Text>
         <View style={styles.socialsBottomLine}></View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  socials: {},
   socialsBottom: {
     marginVertical: 20,
     flexDirection: 'row',

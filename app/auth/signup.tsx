@@ -10,11 +10,15 @@ import { FormSocials } from '../../components/UI/FormSocials';
 import { MainButton } from '../../components/UI/MainButton';
 import { AuthStyles } from './auth.styles';
 import { FormStyles } from '../../styles/FormStyles';
+import { UploadImage } from '../../components/UI/UploadImage';
+import { signUpFx } from '../../stores/AuthStore';
+import { useStore } from 'effector-react';
 
 interface ISignUpFormValues {
   email: string;
   password: string;
   repeatPassword: string;
+  avatar: any;
 }
 
 const signUpValidationSchema = z
@@ -25,6 +29,7 @@ const signUpValidationSchema = z
       .email({ message: 'Must be a valid email' }),
     password: z.string().min(6, { message: 'Password must be atleast 6 characters' }),
     repeatPassword: z.string().min(1, { message: 'Repeat Password is required field' }),
+    avatar: z.any(),
   })
   .refine(({ password, repeatPassword }) => password === repeatPassword, {
     path: ['repeatPassword'],
@@ -37,6 +42,7 @@ const defaultValues: ISignUpFormValues = {
   email: '',
   password: '',
   repeatPassword: '',
+  avatar: null,
 };
 
 const SignUpScreen = () => {
@@ -48,9 +54,13 @@ const SignUpScreen = () => {
     defaultValues,
     resolver: zodResolver(signUpValidationSchema),
   });
+  const isLoading = useStore(signUpFx.pending);
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<SignUpValidationSchema> = async (values: ISignUpFormValues) => {};
+  const onSubmit: SubmitHandler<SignUpValidationSchema> = async (values: ISignUpFormValues) => {
+    await signUpFx({ email: values.email, password: values.password });
+    router.push('/home');
+  };
 
   return (
     <View style={AuthStyles.box}>
@@ -62,10 +72,20 @@ const SignUpScreen = () => {
         <View style={FormStyles.formControl}>
           <Controller
             control={control}
+            render={({ field: { onChange }, fieldState: { error } }) => (
+              <UploadImage onChange={onChange} label={'Avatar'} />
+            )}
+            name="avatar"
+          />
+          {/*{errors.icon && <FormErrorMessage errorMessage={errors.icon.message} />}*/}
+        </View>
+
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <MainInput
                 isImportant
-                isSecureTextEntry
                 value={value}
                 isError={!!error}
                 label={'Email'}
@@ -122,7 +142,12 @@ const SignUpScreen = () => {
         </View>
 
         <View style={FormStyles.formActions}>
-          <MainButton title={'Send'} backgroundColor={'#004EEC'} onPress={handleSubmit(onSubmit)} />
+          <MainButton
+            isLoading={isLoading}
+            title={'Send'}
+            backgroundColor={'#004EEC'}
+            onPress={handleSubmit(onSubmit)}
+          />
 
           <View style={AuthStyles.linkToSingIn}>
             <Text style={AuthStyles.text}>Do you already have account?</Text>

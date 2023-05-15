@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FC } from 'react';
 
 import { ITransaction } from '../../types/entities/Transaction';
+import { formatDate } from '../../utils/format-date';
 
 interface ITransactionItemProps {
   transaction: ITransaction;
@@ -10,7 +11,7 @@ interface ITransactionItemProps {
 export const TransactionItem: FC<ITransactionItemProps> = ({ transaction }) => {
   return (
     <View style={styles.transactionItem}>
-      <Text style={styles.transactionDate}>{transaction.date}</Text>
+      <Text style={styles.transactionDate}>{formatDate(transaction.date)}</Text>
       <Text style={styles.transactionPrice}>${transaction.price}</Text>
     </View>
   );

@@ -12,6 +12,7 @@ import { FC, useState } from 'react';
 
 import { ISubscription } from '../../types/entities/Subscription';
 import { ExpandedSubscriptionItem } from './ExpandedSubscriptionItem';
+import { formatDate } from '../../utils/format-date';
 
 interface ISubscriptionItemProps {
   subscription: ISubscription;
@@ -40,17 +41,29 @@ export const SubscriptionItem: FC<ISubscriptionItemProps> = ({ subscription }) =
         <TouchableOpacity activeOpacity={0.7} style={styles.subscriptionItem} onPress={onPress}>
           <View style={styles.subscriptionItemLeft}>
             <View style={styles.subscriptionItemIconBox}>
-              <Image
-                style={styles.subscriptionItemIcon}
-                source={{
-                  uri: subscription.icon,
-                }}
-              />
+              {subscription?.icon?.url && (
+                <Image
+                  style={styles.subscriptionItemIcon}
+                  source={{
+                    uri: subscription.icon.url,
+                  }}
+                />
+              )}
+
+              {!subscription?.icon?.url && (
+                <Text
+                  style={{ ...styles.subscriptionItemTitle, color: subscription?.color ?? '#000' }}
+                >
+                  {subscription.name.slice(0, 1).toUpperCase()}
+                </Text>
+              )}
             </View>
 
             <View style={styles.subscriptionItemInfo}>
               <Text style={styles.subscriptionItemName}>{subscription.name}</Text>
-              <Text style={styles.subscriptionItemPayDate}>{subscription.pay_date}</Text>
+              <Text style={styles.subscriptionItemPayDate}>
+                {formatDate(subscription.pay_date)}
+              </Text>
             </View>
           </View>
 
@@ -84,7 +97,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subscriptionItemIconBox: {
-    padding: 12,
+    width: 45,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 8,
     backgroundColor: '#f3f3f3',
     marginRight: 12,
@@ -109,6 +125,11 @@ const styles = StyleSheet.create({
   subscriptionItemPrice: {
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',
+    fontSize: 20,
+  },
+  subscriptionItemTitle: {
+    fontFamily: 'Poppins-Bold',
+    fontWeight: '700',
     fontSize: 20,
   },
 });

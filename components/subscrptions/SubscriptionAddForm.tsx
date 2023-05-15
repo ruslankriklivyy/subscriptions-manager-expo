@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FC } from 'react';
+import { useStore } from 'effector-react';
 
 import { FormStyles } from '../../styles/FormStyles';
 import { MainInput } from '../UI/MainInput';
@@ -12,12 +13,15 @@ import { DatePicker } from '../UI/DatePicker';
 import { MainHeader } from '../UI/MainHeader';
 import { ControlColor } from '../UI/ControlColor';
 import { UploadImage } from '../UI/UploadImage';
+import { $user } from '../../stores/UserStore';
+import { createSubscriptionFx, fetchSubscriptionsFx } from '../../stores/SubscriptionStore';
 
 interface IAddFormProps {
   onClose: () => void;
 }
 
-interface ICreateSubscriptionFormValues {
+export interface ICreateSubscriptionFormValues {
+  user_id: string;
   name: string;
   description: string;
   price: string;
@@ -40,6 +44,7 @@ const createSubscriptionValidationSchema = z.object({
 type CreateSubscriptionValidationSchema = z.infer<typeof createSubscriptionValidationSchema>;
 
 const defaultValues: ICreateSubscriptionFormValues = {
+  user_id: '',
   name: '',
   description: '',
   price: '',
@@ -50,6 +55,8 @@ const defaultValues: ICreateSubscriptionFormValues = {
 };
 
 export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
+  const user = useStore($user);
+  const isCreating = useStore(createSubscriptionFx.pending);
   const {
     control,
     handleSubmit,
@@ -62,139 +69,135 @@ export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
   const onSubmit: SubmitHandler<CreateSubscriptionValidationSchema> = async (
     values: ICreateSubscriptionFormValues
   ) => {
+    await createSubscriptionFx({ ...values, user_id: user.id });
+    await fetchSubscriptionsFx({ userId: user.id, offset: 0, perPage: 4 });
     onClose();
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={styles.box}>
-          <MainHeader title={'Create a subscription'} onBack={onClose} />
+    <SafeAreaView style={styles.box}>
+      <MainHeader title={'Create a subscription'} onBack={onClose} />
 
-          <View>
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <UploadImage onChange={onChange} label={'Icon'} />
-                )}
-                name="icon"
-              />
-              {/*{errors.icon && <FormErrorMessage errorMessage={errors.icon.message} />}*/}
-            </View>
+      <ScrollView
+        style={FormStyles.form}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange } }) => <UploadImage onChange={onChange} label={'Icon'} />}
+            name="icon"
+          />
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isImportant
-                    isSecureTextEntry
-                    value={value}
-                    isError={!!error}
-                    label={'Name'}
-                    placeholder={'Enter subscription name'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="name"
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <MainInput
+                isImportant
+                value={value}
+                isError={!!error}
+                label={'Name'}
+                placeholder={'Enter subscription name'}
+                onChangeText={onChange}
+                onBlur={onBlur}
               />
-              {errors.name && <FormErrorMessage errorMessage={errors.name.message} />}
-            </View>
+            )}
+            name="name"
+          />
+          {errors.name && <FormErrorMessage errorMessage={errors.name.message} />}
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isSecureTextEntry
-                    isMultiline
-                    value={value}
-                    isError={!!error}
-                    label={'Description'}
-                    placeholder={'Enter description'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="description"
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <MainInput
+                isMultiline
+                value={value}
+                isError={!!error}
+                label={'Description'}
+                placeholder={'Enter description'}
+                onChangeText={onChange}
+                onBlur={onBlur}
               />
-              {errors.description && <FormErrorMessage errorMessage={errors.description.message} />}
-            </View>
+            )}
+            name="description"
+          />
+          {errors.description && <FormErrorMessage errorMessage={errors.description.message} />}
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isImportant
-                    isSecureTextEntry
-                    value={value}
-                    isError={!!error}
-                    label={'Pay plan'}
-                    placeholder={'Enter subscription pay plan'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="pay_plan"
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <MainInput
+                isImportant
+                value={value}
+                isError={!!error}
+                label={'Pay plan'}
+                placeholder={'Enter subscription pay plan'}
+                onChangeText={onChange}
+                onBlur={onBlur}
               />
-              {errors.pay_plan && <FormErrorMessage errorMessage={errors.pay_plan.message} />}
-            </View>
+            )}
+            name="pay_plan"
+          />
+          {errors.pay_plan && <FormErrorMessage errorMessage={errors.pay_plan.message} />}
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isImportant
-                    isSecureTextEntry
-                    value={value}
-                    isError={!!error}
-                    keyboardType={'numeric'}
-                    label={'Price'}
-                    placeholder={'Enter subscription price'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="price"
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <MainInput
+                isImportant
+                value={value}
+                isError={!!error}
+                keyboardType={'numeric'}
+                label={'Price'}
+                placeholder={'Enter subscription price'}
+                onChangeText={onChange}
+                onBlur={onBlur}
               />
-              {errors.price && <FormErrorMessage errorMessage={errors.price.message} />}
-            </View>
+            )}
+            name="price"
+          />
+          {errors.price && <FormErrorMessage errorMessage={errors.price.message} />}
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <DatePicker isImportant onChange={onChange} value={value} label={'Pay date'} />
-                )}
-                name="pay_date"
-              />
-              {errors.pay_date && <FormErrorMessage errorMessage={errors.pay_date.message} />}
-            </View>
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <DatePicker isImportant onChange={onChange} value={value} label={'Pay date'} />
+            )}
+            name="pay_date"
+          />
+          {errors.pay_date && <FormErrorMessage errorMessage={errors.pay_date.message} />}
+        </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                  <ControlColor onChange={onChange} value={value} label={'Color'} isImportant />
-                )}
-                name="color"
-              />
-              {errors.color && <FormErrorMessage errorMessage={errors.color.message} />}
-            </View>
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <ControlColor onChange={onChange} value={value} label={'Color'} isImportant />
+            )}
+            name="color"
+          />
+          {errors.color && <FormErrorMessage errorMessage={errors.color.message} />}
+        </View>
 
-            <View style={FormStyles.formActions}>
-              <MainButton
-                title={'Create'}
-                backgroundColor={'#33d71e'}
-                textColor={'#000'}
-                onPress={handleSubmit(onSubmit)}
-              />
-            </View>
-          </View>
+        <View style={FormStyles.formActions}>
+          <MainButton
+            isLoading={isCreating}
+            title={'Create'}
+            backgroundColor={'#33d71e'}
+            textColor={'#000'}
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
