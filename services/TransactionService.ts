@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  limit,
   query,
   serverTimestamp,
   setDoc,
@@ -14,16 +15,18 @@ import { ICreateTransactionFormValues } from '../components/transactions/Transac
 
 export interface IGetAllTransactionProps {
   subscriptionId?: string | null;
+  offset?: number;
 }
 
 class TransactionService {
-  async getAll({ subscriptionId }: IGetAllTransactionProps) {
-    let querySnapshot = query(collection(db, 'transactions'));
+  async getAll({ subscriptionId, offset }: IGetAllTransactionProps) {
+    let querySnapshot = query(collection(db, 'transactions'), limit(offset));
 
     if (subscriptionId) {
       querySnapshot = query(
         collection(db, 'transactions'),
-        where('subscription_id', '==', subscriptionId)
+        where('subscription_id', '==', subscriptionId),
+        limit(offset)
       );
     }
 

@@ -15,10 +15,10 @@ const firebaseConfig = {
   appId: Constants?.expoConfig?.extra?.FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 
-export const storage = getStorage(app);
-export const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
-export const auth = getAuth(app);
+export const storage = getStorage(firebaseApp);
+export const db = initializeFirestore(firebaseApp, { experimentalAutoDetectLongPolling: true });
+export const auth = getAuth(firebaseApp);
 
 export default firebase;

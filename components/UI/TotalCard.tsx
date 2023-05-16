@@ -11,8 +11,8 @@ export const TotalCard: FC<ITotalProps> = ({ total }) => {
 
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.box} onPress={() => router.push('/total')}>
-      <Text style={styles.title}>Total</Text>
-      <Text style={styles.total}>${total}</Text>
+      <Text style={styles.title}>Total expenses</Text>
+      <Text style={styles.total}>-${total}</Text>
     </TouchableOpacity>
   );
 };

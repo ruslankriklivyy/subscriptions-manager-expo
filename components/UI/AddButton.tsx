@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { EvilIcons } from '@expo/vector-icons';
+import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { FC } from 'react';
 
 interface IAddButtonProps {
@@ -9,14 +8,22 @@ interface IAddButtonProps {
 export const AddButton: FC<IAddButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.addBtn} onPress={onPress}>
-      <EvilIcons name="plus" size={50} color="black" />
+      <Image style={styles.addBtnIcon} source={require('../../assets/plus.png')} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   addBtn: {
-    width: 50,
-    height: 40,
+    width: 45,
+    height: 45,
+    borderRadius: 100,
+    backgroundColor: '#FFCA44',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addBtnIcon: {
+    width: 27,
+    height: 27,
   },
 });

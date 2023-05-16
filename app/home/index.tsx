@@ -12,16 +12,17 @@ import { Loader } from '../../components/UI/Loader';
 import { $totalExpenses, countTotalExpenses } from '../../stores/StatisticStore';
 
 const Home = () => {
-  const [pagesOffset, setPagesOffset] = useState<number>(0);
-
   const user = useStore($user);
   const subscriptions = useStore($subscriptions);
   const totalExpenses = useStore($totalExpenses);
   const isSubscriptionsLoading = useStore(fetchSubscriptionsFx.pending);
 
+  const [orderBy, setOrderBy] = useState('created_at');
+  const [pagesOffset, setPagesOffset] = useState(5);
+
   useEffect(() => {
-    user && fetchSubscriptionsFx({ userId: user.id, offset: pagesOffset, perPage: 4 });
-  }, [user, pagesOffset]);
+    user && fetchSubscriptionsFx({ userId: user.id, offset: pagesOffset, order: orderBy });
+  }, [user, pagesOffset, orderBy]);
 
   useEffect(() => {
     countTotalExpenses();
@@ -40,7 +41,14 @@ const Home = () => {
 
       <TotalCard total={totalExpenses} />
 
-      <Subscriptions items={subscriptions} isLoading={isSubscriptionsLoading} />
+      <Subscriptions
+        isLoading={isSubscriptionsLoading}
+        pagesOffset={pagesOffset}
+        orderBy={orderBy}
+        items={subscriptions}
+        onChangePageOffset={setPagesOffset}
+        onChangeOrder={setOrderBy}
+      />
     </View>
   );
 };

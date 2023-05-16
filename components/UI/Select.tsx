@@ -2,12 +2,15 @@ import { StyleSheet, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { FC } from 'react';
 
+import { ISelectOption } from '../../types/common/ISelectOption';
+
 interface ISelectProps {
   value?: string;
+  options: ISelectOption[];
   onChange: (value: string) => void;
 }
 
-export const Select: FC<ISelectProps> = ({ value, onChange }) => {
+export const Select: FC<ISelectProps> = ({ value, options, onChange }) => {
   return (
     <View style={styles.box}>
       <Picker
@@ -16,8 +19,9 @@ export const Select: FC<ISelectProps> = ({ value, onChange }) => {
         selectedValue={value}
         onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
       >
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
+        {options.map((option) => (
+          <Picker.Item key={option.value} label={option.label} value={option.value} />
+        ))}
       </Picker>
     </View>
   );

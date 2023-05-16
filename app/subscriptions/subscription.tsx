@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { useSearchParams } from 'expo-router';
 import { useStore } from 'effector-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 
 import { MainHeader } from '../../components/UI/MainHeader';
@@ -27,13 +27,18 @@ const Subscription = () => {
   const searchParams = useSearchParams();
   const nowDate = moment().format(FORMAT_DATE_PARSE);
 
+  const [pagesOffset, setPagesOffset] = useState(5);
+
   useEffect(() => {
     fetchSubscriptionFx(searchParams?.id as string);
-    fetchTransactionsFx(searchParams?.id as string);
   }, [searchParams?.id]);
 
   useEffect(() => {
-    countTotalExpenses(transactions);
+    fetchTransactionsFx({ subscriptionId: searchParams?.id as string, offset: pagesOffset });
+  }, [searchParams?.id, pagesOffset]);
+
+  useEffect(() => {
+    transactions && countTotalExpenses(transactions);
   }, [transactions]);
 
   return (
@@ -59,7 +64,13 @@ const Subscription = () => {
               </View>
             </View>
 
-            <Transactions isLoading={isTransactionsLoading} transactions={transactions} />
+            <Transactions
+              pagesOffset={pagesOffset}
+              isLoading={isTransactionsLoading}
+              transactions={transactions}
+              onChangePageOffset={setPagesOffset}
+              customStyles={{ height: '40%' }}
+            />
           </View>
         </>
       )}

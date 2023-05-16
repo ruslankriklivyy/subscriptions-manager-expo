@@ -1,6 +1,6 @@
 import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from 'effector-react';
 
 import { MainHeader } from '../../components/UI/MainHeader';
@@ -24,8 +24,10 @@ const Total = () => {
   const isLoadingExpensesStatistic = useStore(countTotalExpensesByDate.pending);
   const isLoadingTransactions = useStore(fetchTransactionsFx.pending);
 
+  const [pagesOffset, setPagesOffset] = useState(5);
+
   useEffect(() => {
-    fetchTransactionsFx();
+    fetchTransactionsFx({ offset: pagesOffset });
     countTotalExpenses();
     countTotalExpensesByDate();
   }, []);
@@ -85,8 +87,10 @@ const Total = () => {
 
           <Transactions
             withoutCreate
+            pagesOffset={pagesOffset}
             isLoading={isLoadingTransactions}
             transactions={transactions}
+            onChangePageOffset={setPagesOffset}
           />
         </View>
       )}

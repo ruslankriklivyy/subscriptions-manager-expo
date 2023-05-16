@@ -111,7 +111,7 @@ const SignIn = () => {
           <View style={AuthStyles.linkToSingIn}>
             <Text style={AuthStyles.text}>Are you not have an account?</Text>
 
-            <Pressable onPress={() => router.push('/home')}>
+            <Pressable onPress={() => router.push('/auth/signup')}>
               <Text style={AuthStyles.link}>Sign Up</Text>
             </Pressable>
           </View>

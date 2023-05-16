@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { ISubscription } from '../../types/entities/Subscription';
 import { SubscriptionItem } from './SubscriptionItem';
@@ -9,28 +9,67 @@ import { Loader } from '../UI/Loader';
 
 interface ISubscriptionsProps {
   items: ISubscription[];
+  pagesOffset: number;
+  orderBy: string;
   isLoading: boolean;
+  onChangePageOffset: (pageOffset: number) => void;
+  onChangeOrder: (order: string) => void;
 }
 
-const Subscriptions: FC<ISubscriptionsProps> = ({ items, isLoading }) => {
+const Subscriptions: FC<ISubscriptionsProps> = ({
+  items,
+  pagesOffset,
+  orderBy,
+  isLoading,
+  onChangePageOffset,
+  onChangeOrder,
+}) => {
+  const onHandleChangePageOffset = () => {
+    if (pagesOffset > items?.length) return;
+    onChangePageOffset(pagesOffset + 5);
+  };
+
+  const onHandleChangeOrder = (order: string) => onChangeOrder(order);
+
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
+
   return (
     <View style={styles.subscriptions}>
       <View style={styles.top}>
         <Text style={styles.title}>All Subscriptions</Text>
 
-        <Select onChange={() => null} value={'Java'} />
+        <View style={styles.orderBy}>
+          <Text style={styles.orderByTitle}>Order by:</Text>
+
+          <Select
+            onChange={onHandleChangeOrder}
+            options={[
+              { label: 'Date', value: 'created_at' },
+              { label: 'Price', value: 'price' },
+            ]}
+            value={orderBy}
+          />
+        </View>
       </View>
 
       <View style={styles.contentContainer}>
-        {isLoading && <Loader />}
-
-        {!isLoading && (
+        {items && (
           <FlatList
             data={items}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => <SubscriptionItem subscription={item} />}
-            ListEmptyComponent={EmptySubscriptions}
+            ListEmptyComponent={!isLoading && EmptySubscriptions}
+            ListFooterComponent={() =>
+              isLoading && (
+                <View style={styles.loaderFooter}>
+                  <Loader />
+                </View>
+              )
+            }
+            onEndReached={() => onHandleChangePageOffset()}
             keyExtractor={(item) => item.id}
           />
         )}
@@ -57,6 +96,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   contentContainer: {
-    height: '78%',
+    height: '74%',
+  },
+  loaderFooter: {
+    height: 90,
+  },
+  orderBy: {},
+  orderByTitle: {
+    fontFamily: 'Poppins-Medium',
+    fontWeight: '500',
+    fontSize: 13,
+    color: '#000',
+    opacity: 0.5,
   },
 });

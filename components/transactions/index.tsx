@@ -8,30 +8,49 @@ import { Loader } from '../UI/Loader';
 
 interface ITransactionsProps {
   transactions: ITransaction[];
+  pagesOffset: number;
+  customStyles?: Record<string, string>;
   isLoading?: boolean;
   withoutCreate?: boolean;
+  onChangePageOffset: (pagesOffset: number) => void;
 }
 
-const Transactions: FC<ITransactionsProps> = ({ transactions, isLoading, withoutCreate }) => {
+const Transactions: FC<ITransactionsProps> = ({
+  transactions,
+  pagesOffset,
+  isLoading,
+  withoutCreate,
+  customStyles,
+  onChangePageOffset,
+}) => {
+  const onHandleChangePageOffset = () => {
+    if (pagesOffset > transactions?.length) return;
+    onChangePageOffset(pagesOffset + 5);
+  };
+
   return (
-    <View style={styles.transactionsBox}>
+    <View style={{ ...styles.transactionsBox, ...customStyles }}>
       <View style={styles.transactionsTop}>
         <Text style={styles.transactionsTitle}>Transactions</Text>
 
         {!withoutCreate && <AddTransactionBlock />}
       </View>
 
-      {isLoading && <Loader />}
-
-      {!isLoading && (
-        <FlatList
-          data={transactions}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => <TransactionItem transaction={item} />}
-          keyExtractor={(item) => item.id}
-        />
-      )}
+      <FlatList
+        data={transactions}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => <TransactionItem transaction={item} />}
+        ListFooterComponent={() =>
+          isLoading && (
+            <View style={styles.loaderFooter}>
+              <Loader />
+            </View>
+          )
+        }
+        onEndReached={() => onHandleChangePageOffset()}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
@@ -41,7 +60,7 @@ export default Transactions;
 const styles = StyleSheet.create({
   transactionsBox: {
     marginTop: 20,
-    height: 300,
+    height: '44%',
   },
   transactionsTop: {
     flexDirection: 'row',
@@ -55,4 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 21,
   },
   transactions: {},
+  loaderFooter: {
+    height: 80,
+  },
 });

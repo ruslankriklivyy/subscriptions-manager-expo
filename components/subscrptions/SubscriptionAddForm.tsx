@@ -24,7 +24,7 @@ export interface ICreateSubscriptionFormValues {
   user_id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
   pay_date: Date;
   pay_plan: string;
   color: string;
@@ -34,7 +34,7 @@ export interface ICreateSubscriptionFormValues {
 const createSubscriptionValidationSchema = z.object({
   name: z.string().min(1, { message: 'Name is required field' }),
   description: z.string(),
-  price: z.string().min(1, { message: 'Price is required field' }),
+  price: z.number().min(1, { message: 'Price is required field' }),
   pay_date: z.date(),
   pay_plan: z.string().min(1, { message: 'Pay plan is required field' }),
   color: z.string().min(3, { message: 'Color is required field' }),
@@ -47,11 +47,11 @@ const defaultValues: ICreateSubscriptionFormValues = {
   user_id: '',
   name: '',
   description: '',
-  price: '',
+  price: 0,
   pay_date: new Date(),
   pay_plan: '',
   color: '',
-  icon: {},
+  icon: null,
 };
 
 export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
@@ -70,7 +70,7 @@ export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
     values: ICreateSubscriptionFormValues
   ) => {
     await createSubscriptionFx({ ...values, user_id: user.id });
-    await fetchSubscriptionsFx({ userId: user.id, offset: 0, perPage: 4 });
+    await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
     onClose();
   };
 
@@ -154,12 +154,12 @@ export const SubscriptionAddForm: FC<IAddFormProps> = ({ onClose }) => {
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <MainInput
                 isImportant
-                value={value}
+                value={String(value)}
                 isError={!!error}
                 keyboardType={'numeric'}
                 label={'Price'}
                 placeholder={'Enter subscription price'}
-                onChangeText={onChange}
+                onChangeText={(val) => onChange(Number(val))}
                 onBlur={onBlur}
               />
             )}

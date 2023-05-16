@@ -64,7 +64,7 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
         year: moment(values.date).year(),
       },
     });
-    await fetchTransactionsFx(subscription.id);
+    await fetchTransactionsFx({ subscriptionId: subscription.id, offset: 5 });
     onClose();
   };
 

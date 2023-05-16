@@ -2,14 +2,14 @@ import { createEffect, createEvent, createStore } from 'effector';
 import { collection, getDocs, query, where } from '@firebase/firestore';
 import moment from 'moment';
 
-import TransactionService from '../services/TransactionService';
+import TransactionService, { IGetAllTransactionProps } from '../services/TransactionService';
 import { ICreateTransactionFormValues } from '../components/transactions/TransactionAddForm';
 import { ITransaction } from '../types/entities/Transaction';
 import { db } from '../config/firebase';
 import { MONTHS_ARR } from '../config/consts';
 
-export const fetchTransactionsFx = createEffect(async (subscriptionId?: string) => {
-  return await TransactionService.getAll({ subscriptionId });
+export const fetchTransactionsFx = createEffect(async (payload: IGetAllTransactionProps) => {
+  return await TransactionService.getAll(payload);
 });
 export const fetchTransactionFx = createEffect(async (id: string) => {
   return await TransactionService.getOne(id);

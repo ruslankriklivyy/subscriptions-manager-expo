@@ -5,8 +5,10 @@ import { FC } from 'react';
 
 import { MainButton } from '../UI/MainButton';
 import { ISubscription } from '../../types/entities/Subscription';
-import { deleteSubscriptionFx } from '../../stores/SubscriptionStore';
+import { deleteSubscriptionFx, fetchSubscriptionsFx } from '../../stores/SubscriptionStore';
 import { formatDate } from '../../utils/format-date';
+import { useStore } from 'effector-react';
+import { $user } from '../../stores/UserStore';
 
 interface IExpandedSubscriptionItemProps {
   isView?: boolean;
@@ -19,10 +21,12 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
   subscription,
   onPress,
 }) => {
+  const user = useStore($user);
   const router = useRouter();
 
   const onDelete = async () => {
     await deleteSubscriptionFx({ id: subscription.id, iconUrl: subscription?.icon?.url });
+    await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
     router.push('/home');
   };
 
