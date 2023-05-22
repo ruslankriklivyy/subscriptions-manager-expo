@@ -59,8 +59,7 @@ const Transactions: FC<ITransactionsProps> = ({
         )}
         ListEmptyComponent={!isLoading && EmptyList}
         ListFooterComponent={() =>
-          isLoading &&
-          !transactions && (
+          isLoading && (
             <View style={styles.loaderFooter}>
               <Loader />
             </View>

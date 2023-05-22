@@ -16,6 +16,7 @@ import { createTransactionFx, fetchTransactionsFx } from '../../stores/Transacti
 import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 import { $user } from '../../stores/UserStore';
+import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 
 interface ITransactionAddFormProps {
   onClose: () => void;
@@ -30,7 +31,7 @@ export interface ICreateTransactionFormValues {
 }
 
 const createTransactionValidationSchema = z.object({
-  price: z.string().min(1, { message: 'Price is required field' }),
+  price: z.string().min(1, { message: buildRequiredErrorMessage('Price') }),
   date: z.date(),
 });
 

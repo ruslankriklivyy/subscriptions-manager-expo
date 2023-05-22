@@ -27,10 +27,6 @@ export const resetSubscription = createEvent();
 export const $subscriptions = createStore<ISubscription[] | null>(null)
   .on(setSubscriptions, (state, payload) => payload)
   .on(fetchSubscriptionsFx.doneData, (_, repos) => repos);
-export const $editableSubscription = createStore(null).on(
-  fetchSubscriptionFx.doneData,
-  (_, repos) => repos
-);
 export const $subscription = createStore(null)
   .on(setSubscription, (state, payload) => payload)
   .on(fetchSubscriptionFx.doneData, (_, repos) => repos)

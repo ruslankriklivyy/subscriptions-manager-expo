@@ -36,6 +36,9 @@ const Total = () => {
 
   useEffect(() => {
     fetchTransactionsFx({ offset: pagesOffset });
+  }, [pagesOffset]);
+
+  useEffect(() => {
     countTotalExpensesByDate();
   }, []);
 
@@ -57,6 +60,7 @@ const Total = () => {
             showsHorizontalScrollIndicator={false}
           >
             <LineChart
+              bezier
               data={{
                 labels: MONTHS_ARR,
                 datasets: [
@@ -85,7 +89,6 @@ const Total = () => {
                   stroke: '#004EEC',
                 },
               }}
-              bezier
               style={{
                 marginBottom: 30,
                 marginVertical: 8,

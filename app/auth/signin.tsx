@@ -12,6 +12,8 @@ import { MainButton } from '../../components/UI/MainButton';
 import { AuthStyles } from './auth.styles';
 import { FormStyles } from '../../styles/FormStyles';
 import { signInFx } from '../../stores/AuthStore';
+import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+import { setModal } from '../../stores/ModalStore';
 
 interface ISignInFormValues {
   email: string;
@@ -21,7 +23,7 @@ interface ISignInFormValues {
 const signInValidationSchema = z.object({
   email: z
     .string()
-    .min(1, { message: 'Email is required field' })
+    .min(1, { message: buildRequiredErrorMessage('Email') })
     .email({ message: 'Must be a valid email' }),
   password: z.string().min(6, { message: 'Password must be atleast 6 characters' }),
 });
@@ -50,7 +52,7 @@ const SignIn = () => {
       await signInFx({ email: values.email, password: values.password });
       router.push('/home');
     } catch (error) {
-      console.log(error);
+      setModal({ message: error.message, type: 'error' });
     }
   };
 

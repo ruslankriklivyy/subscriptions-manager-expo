@@ -2,7 +2,7 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useStore } from 'effector-react';
 
 import { FormStyles } from '../../styles/FormStyles';
@@ -22,6 +22,7 @@ import {
   updateSubscriptionFx,
 } from '../../stores/SubscriptionStore';
 import { Loader } from '../UI/Loader';
+import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 
 interface ISubscriptionFormProps {
   subscriptionId?: string;
@@ -40,12 +41,12 @@ export interface ISubscriptionFormValues {
 }
 
 const createSubscriptionValidationSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required field' }),
+  name: z.string().min(1, { message: buildRequiredErrorMessage('Name') }),
   description: z.string(),
-  price: z.number().min(1, { message: 'Price is required field' }),
+  price: z.number().min(1, { message: buildRequiredErrorMessage('Price') }),
   pay_date: z.date(),
-  pay_plan: z.string().min(1, { message: 'Pay plan is required field' }),
-  color: z.string().min(3, { message: 'Color is required field' }),
+  pay_plan: z.string().min(1, { message: buildRequiredErrorMessage('Pay plan') }),
+  color: z.string().min(3, { message: buildRequiredErrorMessage('Color') }),
   icon: z.any(),
 });
 
@@ -60,7 +61,7 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
   const isLoading = useStore(fetchSubscriptionFx.pending);
   const isCreating = useStore(createSubscriptionFx.pending);
 
-  const defaultValues = (values?: ISubscriptionFormValues) => {
+  const defaultValues = (values?: Partial<ISubscriptionFormValues>) => {
     return {
       user_id: values?.user_id || '',
       name: values?.name || '',
@@ -78,7 +79,10 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
     handleSubmit,
     formState: { errors },
   } = useForm<CreateSubscriptionValidationSchema>({
-    defaultValues: defaultValues(subscription),
+    defaultValues: useMemo(
+      () => defaultValues(subscriptionId ? subscription : {}),
+      [subscription, subscriptionId]
+    ),
     resolver: zodResolver(createSubscriptionValidationSchema),
   });
 
@@ -99,9 +103,9 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
     subscriptionId && fetchSubscriptionFx(subscriptionId);
   }, [subscriptionId]);
 
-  useEffect(() => {
-    subscription && defaultValues(subscription);
-  }, [subscription]);
+  // useEffect(() => {
+  //   subscription && defaultValues(subscription);
+  // }, [subscription]);
 
   return (
     <SafeAreaView style={styles.box}>

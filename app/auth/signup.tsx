@@ -14,6 +14,7 @@ import { FormStyles } from '../../styles/FormStyles';
 import { UploadImage } from '../../components/UI/UploadImage';
 import { signUpFx } from '../../stores/AuthStore';
 import { setModal } from '../../stores/ModalStore';
+import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 
 interface ISignUpFormValues {
   email: string;
@@ -26,10 +27,10 @@ const signUpValidationSchema = z
   .object({
     email: z
       .string()
-      .min(1, { message: 'Email is required field' })
+      .min(1, { message: buildRequiredErrorMessage('Email') })
       .email({ message: 'Must be a valid email' }),
     password: z.string().min(6, { message: 'Password must be atleast 6 characters' }),
-    repeatPassword: z.string().min(1, { message: 'Repeat Password is required field' }),
+    repeatPassword: z.string().min(1, { message: buildRequiredErrorMessage('Repeat Password') }),
     avatar: z.any(),
   })
   .refine(({ password, repeatPassword }) => password === repeatPassword, {

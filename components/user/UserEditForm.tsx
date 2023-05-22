@@ -20,6 +20,7 @@ import { auth } from '../../config/firebase';
 import { UploadImage } from '../UI/UploadImage';
 import { setModal } from '../../stores/ModalStore';
 import { IFirebaseImage } from '../../types/common/IFirebaseImage';
+import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 
 export interface IUserEditFormValues {
   email: string;
@@ -31,9 +32,9 @@ export interface IUserEditFormValues {
 const userEditValidationSchema = z.object({
   email: z
     .string()
-    .min(1, { message: 'Email is required field' })
+    .min(1, { message: buildRequiredErrorMessage('Email') })
     .email({ message: 'Must be a valid email' }),
-  full_name: z.string().min(1, { message: 'Full Name is required field' }),
+  full_name: z.string().min(1, { message: buildRequiredErrorMessage('Full Name') }),
   birth_date: z.date(),
   avatar: z.any(),
 });
