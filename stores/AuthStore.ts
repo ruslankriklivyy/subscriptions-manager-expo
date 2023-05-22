@@ -6,20 +6,12 @@ import { auth } from '../config/firebase';
 import UserService from '../services/UserService';
 
 export const signInFx = createEffect(async (payload) => {
-  try {
-    await signInWithEmailAndPassword(auth, payload.email, payload.password);
-  } catch (error) {
-    console.log(error);
-  }
+  await signInWithEmailAndPassword(auth, payload.email, payload.password);
 });
 
 export const signUpFx = createEffect(async (payload) => {
-  try {
-    const { user } = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
-    await UserService.create(user);
-  } catch (error) {
-    console.log(error);
-  }
+  const { user } = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
+  await UserService.create({ ...user, avatar: payload?.avatar });
 });
 
 export const $isAuth = createStore(false)

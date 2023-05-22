@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import { ISubscription } from '../../types/entities/Subscription';
 import { SubscriptionItem } from './SubscriptionItem';
 import { Select } from '../UI/Select';
-import { EmptySubscriptions } from './EmptySubscriptions';
+import { EmptyList } from '../UI/EmptyList';
 import { Loader } from '../UI/Loader';
 
 interface ISubscriptionsProps {
@@ -30,10 +30,6 @@ const Subscriptions: FC<ISubscriptionsProps> = ({
   };
 
   const onHandleChangeOrder = (order: string) => onChangeOrder(order);
-
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   return (
     <View style={styles.subscriptions}>
@@ -61,9 +57,10 @@ const Subscriptions: FC<ISubscriptionsProps> = ({
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => <SubscriptionItem subscription={item} />}
-            ListEmptyComponent={!isLoading && EmptySubscriptions}
+            ListEmptyComponent={!isLoading && EmptyList}
             ListFooterComponent={() =>
-              isLoading && (
+              isLoading &&
+              !items && (
                 <View style={styles.loaderFooter}>
                   <Loader />
                 </View>

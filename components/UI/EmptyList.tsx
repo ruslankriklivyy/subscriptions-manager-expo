@@ -1,6 +1,6 @@
 import { Image, View, Text, StyleSheet } from 'react-native';
 
-export const EmptySubscriptions = () => {
+export const EmptyList = () => {
   return (
     <View style={styles.box}>
       <Image source={require('../../assets/empty.png')} style={styles.image} />

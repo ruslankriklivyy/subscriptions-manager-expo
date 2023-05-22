@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
+import { useStore } from 'effector-react';
 
 import { MainInput } from '../../components/UI/MainInput';
 import { FormErrorMessage } from '../../components/UI/FormErrorMessage';
@@ -12,7 +13,7 @@ import { AuthStyles } from './auth.styles';
 import { FormStyles } from '../../styles/FormStyles';
 import { UploadImage } from '../../components/UI/UploadImage';
 import { signUpFx } from '../../stores/AuthStore';
-import { useStore } from 'effector-react';
+import { setModal } from '../../stores/ModalStore';
 
 interface ISignUpFormValues {
   email: string;
@@ -58,8 +59,12 @@ const SignUpScreen = () => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignUpValidationSchema> = async (values: ISignUpFormValues) => {
-    await signUpFx({ email: values.email, password: values.password });
-    router.push('/home');
+    try {
+      await signUpFx({ email: values.email, password: values.password, avatar: values.avatar });
+      router.push('/home');
+    } catch (error) {
+      setModal({ message: error.message, type: 'error' });
+    }
   };
 
   return (
@@ -72,12 +77,11 @@ const SignUpScreen = () => {
         <View style={FormStyles.formControl}>
           <Controller
             control={control}
-            render={({ field: { onChange }, fieldState: { error } }) => (
+            render={({ field: { onChange } }) => (
               <UploadImage onChange={onChange} label={'Avatar'} />
             )}
             name="avatar"
           />
-          {/*{errors.icon && <FormErrorMessage errorMessage={errors.icon.message} />}*/}
         </View>
 
         <View style={FormStyles.formControl}>

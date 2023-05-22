@@ -15,6 +15,7 @@ import { MainHeader } from '../UI/MainHeader';
 import { createTransactionFx, fetchTransactionsFx } from '../../stores/TransactionStore';
 import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
+import { $user } from '../../stores/UserStore';
 
 interface ITransactionAddFormProps {
   onClose: () => void;
@@ -25,6 +26,7 @@ export interface ICreateTransactionFormValues {
   date_statistic: ITransactionDateStatistic;
   price: string;
   subscription_id: string;
+  user_id: string;
 }
 
 const createTransactionValidationSchema = z.object({
@@ -39,6 +41,7 @@ const defaultValues: ICreateTransactionFormValues = {
   date: new Date(),
   date_statistic: null,
   subscription_id: '',
+  user_id: '',
 };
 
 export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) => {
@@ -51,7 +54,8 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
     resolver: zodResolver(createTransactionValidationSchema),
   });
   const subscription = useStore($subscription);
-  const isLoading = useStore(createTransactionFx.pending);
+  const user = useStore($user);
+  const isCreating = useStore(createTransactionFx.pending);
 
   const onSubmit: SubmitHandler<CreateTransactionValidationSchema> = async (
     values: ICreateTransactionFormValues
@@ -59,6 +63,7 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
     await createTransactionFx({
       ...values,
       subscription_id: subscription.id,
+      user_id: user.id,
       date_statistic: {
         month_index: moment(values.date).month(),
         year: moment(values.date).year(),
@@ -107,7 +112,7 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
 
           <View style={FormStyles.formActions}>
             <MainButton
-              isLoading={isLoading}
+              isLoading={isCreating}
               title={'Create'}
               backgroundColor={'#33d71e'}
               textColor={'#000'}

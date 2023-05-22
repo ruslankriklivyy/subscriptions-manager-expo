@@ -11,12 +11,15 @@ import {
   $totalExpensesByMonths,
   $transactions,
   countTotalExpensesByDate,
+  deleteTransactionFx,
   fetchTransactionsFx,
 } from '../../stores/TransactionStore';
 import { Loader } from '../../components/UI/Loader';
 import { MONTHS_ARR } from '../../config/consts';
+import { $user } from '../../stores/UserStore';
 
 const Total = () => {
+  const user = useStore($user);
   const transactions = useStore($transactions);
   const totalExpenses = useStore($totalExpenses);
   const totalExpensesStatistic = useStore($totalExpensesByMonths);
@@ -26,11 +29,19 @@ const Total = () => {
 
   const [pagesOffset, setPagesOffset] = useState(5);
 
+  const onDeleteTransaction = async (id: string) => {
+    await deleteTransactionFx(id);
+    await fetchTransactionsFx({ offset: pagesOffset });
+  };
+
   useEffect(() => {
     fetchTransactionsFx({ offset: pagesOffset });
-    countTotalExpenses();
     countTotalExpensesByDate();
   }, []);
+
+  useEffect(() => {
+    user && countTotalExpenses(user.id);
+  }, [user]);
 
   return (
     <SafeAreaView style={styles.box}>
@@ -91,6 +102,7 @@ const Total = () => {
             isLoading={isLoadingTransactions}
             transactions={transactions}
             onChangePageOffset={setPagesOffset}
+            onDeleteTransaction={onDeleteTransaction}
           />
         </View>
       )}

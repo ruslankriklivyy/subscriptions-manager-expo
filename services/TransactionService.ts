@@ -15,17 +15,26 @@ import { ICreateTransactionFormValues } from '../components/transactions/Transac
 
 export interface IGetAllTransactionProps {
   subscriptionId?: string | null;
+  userId?: string | null;
   offset?: number;
 }
 
 class TransactionService {
-  async getAll({ subscriptionId, offset }: IGetAllTransactionProps) {
+  async getAll({ subscriptionId, userId, offset }: IGetAllTransactionProps) {
     let querySnapshot = query(collection(db, 'transactions'), limit(offset));
 
     if (subscriptionId) {
       querySnapshot = query(
         collection(db, 'transactions'),
         where('subscription_id', '==', subscriptionId),
+        limit(offset)
+      );
+    }
+
+    if (userId) {
+      querySnapshot = query(
+        collection(db, 'transactions'),
+        where('user_id', '==', userId),
         limit(offset)
       );
     }

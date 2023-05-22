@@ -4,14 +4,19 @@ import { StyleSheet, View } from 'react-native';
 import { Logs } from 'expo';
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useStore } from 'effector-react';
 
 import { auth } from '../config/firebase';
 import UserService from '../services/UserService';
 import { setUser } from '../stores/UserStore';
+import { $modal, setModal } from '../stores/ModalStore';
+import { MainModal } from '../components/UI/MainModal';
+import { ResultBlock } from '../components/UI/ResultBlock';
 
 Logs.enableExpoCliLogging();
 
 export default function Layout() {
+  const modal = useStore($modal);
   const [user] = useAuthState(auth);
   const [fontsLoaded] = useFonts({
     'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
@@ -19,6 +24,10 @@ export default function Layout() {
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
   });
+
+  const closeModal = () => {
+    setModal(null);
+  };
 
   useEffect(() => {
     if (user) {
@@ -35,6 +44,12 @@ export default function Layout() {
   return (
     <View style={styles.container}>
       <Slot />
+
+      {modal && (
+        <MainModal isModalVisible={!!modal} onClose={closeModal}>
+          <ResultBlock message={modal.message} type={modal.type} onClose={closeModal} />
+        </MainModal>
+      )}
     </View>
   );
 }

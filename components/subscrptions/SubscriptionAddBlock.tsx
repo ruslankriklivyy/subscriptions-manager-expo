@@ -1,7 +1,7 @@
 import { Modal } from 'react-native';
 import { useState } from 'react';
 
-import { SubscriptionAddForm } from './SubscriptionAddForm';
+import { SubscriptionForm } from './SubscriptionForm';
 import { AddButton } from '../UI/AddButton';
 
 export const SubscriptionAddBlock = () => {
@@ -17,7 +17,7 @@ export const SubscriptionAddBlock = () => {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(!isModalVisible)}
       >
-        <SubscriptionAddForm onClose={() => setIsModalVisible(false)} />
+        <SubscriptionForm onClose={() => setIsModalVisible(false)} />
       </Modal>
     </>
   );

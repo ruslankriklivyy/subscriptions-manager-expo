@@ -13,9 +13,12 @@ import {
   $totalExpenses,
   $transactions,
   countTotalExpenses,
+  deleteTransactionFx,
   fetchTransactionsFx,
 } from '../../stores/TransactionStore';
 import { FORMAT_DATE_PARSE } from '../../config/consts';
+import { MainModal } from '../../components/UI/MainModal';
+import { SubscriptionForm } from '../../components/subscrptions/SubscriptionForm';
 
 const Subscription = () => {
   const totalExpenses = useStore($totalExpenses);
@@ -23,58 +26,83 @@ const Subscription = () => {
   const subscription = useStore($subscription);
   const isSubscriptionsLoading = useStore(fetchSubscriptionFx.pending);
   const isTransactionsLoading = useStore(fetchTransactionsFx.pending);
-
   const searchParams = useSearchParams();
+
   const nowDate = moment().format(FORMAT_DATE_PARSE);
+  const subscriptionId = searchParams?.id as string;
 
   const [pagesOffset, setPagesOffset] = useState(5);
+  const [isVisibleSubscriptionEditModal, setIsVisibleSubscriptionEditModal] = useState(false);
+
+  const onDeleteTransaction = async (id: string) => {
+    await deleteTransactionFx(id);
+    await fetchTransactionsFx({ subscriptionId, offset: pagesOffset });
+  };
 
   useEffect(() => {
-    fetchSubscriptionFx(searchParams?.id as string);
-  }, [searchParams?.id]);
+    fetchSubscriptionFx(subscriptionId);
+  }, [subscriptionId]);
 
   useEffect(() => {
-    fetchTransactionsFx({ subscriptionId: searchParams?.id as string, offset: pagesOffset });
-  }, [searchParams?.id, pagesOffset]);
+    fetchTransactionsFx({ subscriptionId, offset: pagesOffset });
+  }, [subscriptionId, pagesOffset]);
 
   useEffect(() => {
     transactions && countTotalExpenses(transactions);
   }, [transactions]);
 
   return (
-    <SafeAreaView style={styles.box}>
-      {isSubscriptionsLoading && <Loader />}
+    <>
+      <SafeAreaView style={styles.box}>
+        {isSubscriptionsLoading && <Loader />}
 
-      {!isSubscriptionsLoading && subscription && (
-        <>
-          <MainHeader title={'Subscription'} />
+        {!isSubscriptionsLoading && subscription && (
+          <>
+            <MainHeader title={'Subscription'} />
 
-          <View style={styles.content}>
-            {subscription && <ExpandedSubscriptionItem subscription={subscription} />}
+            <View style={styles.content}>
+              {subscription && (
+                <ExpandedSubscriptionItem
+                  subscription={subscription}
+                  onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
+                />
+              )}
 
-            <View style={styles.expenses}>
-              <View style={styles.expensesLeft}>
-                <Text style={styles.expensesTitle}>Expenses</Text>
+              <View style={styles.expenses}>
+                <View style={styles.expensesLeft}>
+                  <Text style={styles.expensesTitle}>Expenses</Text>
 
-                <Text style={styles.expensesDate}>{nowDate}</Text>
+                  <Text style={styles.expensesDate}>{nowDate}</Text>
+                </View>
+
+                <View style={styles.expensesRight}>
+                  <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+                </View>
               </View>
 
-              <View style={styles.expensesRight}>
-                <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
-              </View>
+              <Transactions
+                pagesOffset={pagesOffset}
+                isLoading={isTransactionsLoading}
+                transactions={transactions}
+                onChangePageOffset={setPagesOffset}
+                onDeleteTransaction={onDeleteTransaction}
+                customStyles={{ height: '42%' }}
+              />
             </View>
+          </>
+        )}
+      </SafeAreaView>
 
-            <Transactions
-              pagesOffset={pagesOffset}
-              isLoading={isTransactionsLoading}
-              transactions={transactions}
-              onChangePageOffset={setPagesOffset}
-              customStyles={{ height: '40%' }}
-            />
-          </View>
-        </>
-      )}
-    </SafeAreaView>
+      <MainModal
+        isModalVisible={isVisibleSubscriptionEditModal}
+        onClose={() => setIsVisibleSubscriptionEditModal(false)}
+      >
+        <SubscriptionForm
+          subscriptionId={subscriptionId}
+          onClose={() => setIsVisibleSubscriptionEditModal(false)}
+        />
+      </MainModal>
+    </>
   );
 };
 

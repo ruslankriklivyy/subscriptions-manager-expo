@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { FC } from 'react';
 
-import { ISelectOption } from '../../types/common/ISelectOption';
+import { ISelectOption } from '../../types/common/SelectOption';
 
 interface ISelectProps {
   value?: string;

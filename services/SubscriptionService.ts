@@ -9,11 +9,12 @@ import {
   limit,
   orderBy,
   serverTimestamp,
+  updateDoc,
 } from '@firebase/firestore';
 import { ref, deleteObject } from '@firebase/storage';
 
 import { db, storage } from '../config/firebase';
-import { ICreateSubscriptionFormValues } from '../components/subscrptions/SubscriptionAddForm';
+import { ISubscriptionFormValues } from '../components/subscrptions/SubscriptionForm';
 import { uploadImage } from '../utils/upload-image';
 
 export interface IGetAllSubscriptionsProps {
@@ -42,7 +43,7 @@ class SubscriptionService {
     return docs.docs.map((doc) => doc.data())[0];
   }
 
-  async createOne(payload: ICreateSubscriptionFormValues) {
+  async createOne(payload: ISubscriptionFormValues) {
     const newSubscription: any = { ...payload, icon: null };
     const image = await uploadImage(payload.icon);
 
@@ -58,6 +59,16 @@ class SubscriptionService {
     });
 
     return { ...newSubscription, id: subscriptionRef.id };
+  }
+
+  async updateOne(id: string, payload: ISubscriptionFormValues) {
+    const newSubscription = { ...payload };
+
+    if (payload?.icon && 'uri' in payload.icon) {
+      newSubscription['icon'] = await uploadImage(payload.icon);
+    }
+
+    await updateDoc(doc(db, 'subscriptions', id), { ...newSubscription });
   }
 
   async deleteOne(id: string, iconUrl?: string) {

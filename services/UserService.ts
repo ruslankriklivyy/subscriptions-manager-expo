@@ -5,6 +5,8 @@ import { db } from '../config/firebase';
 import { IUser } from '../types/entities/User';
 import { IUserEditFormValues } from '../components/user/UserEditForm';
 import { uploadImage } from '../utils/upload-image';
+import { ImagePickerAsset } from 'expo-image-picker/src/ImagePicker.types';
+import { IFirebaseImage } from '../types/common/IFirebaseImage';
 
 class UserService {
   async getOne(id: string) {
@@ -13,7 +15,7 @@ class UserService {
     return docs.docs.map((doc) => doc.data())[0] as IUser;
   }
 
-  async create(payload: User) {
+  async create(payload: User & { avatar: ImagePickerAsset | null }) {
     const q = query(collection(db, 'users'), where('id', '==', payload.uid));
     const docs = await getDocs(q);
 
@@ -27,16 +29,19 @@ class UserService {
         email: payload.email,
       };
 
+      if (payload.avatar) {
+        newUser['avatar'] = await uploadImage(payload.avatar);
+      }
+
       await setDoc(userRef, newUser);
     }
   }
 
   async update(id: string, payload: IUserEditFormValues) {
-    const newUser: any = { ...payload };
-    const image = await uploadImage(payload.avatar);
+    const newUser = { ...payload };
 
-    if (image) {
-      newUser['avatar'] = image;
+    if (payload?.avatar && 'uri' in payload.avatar) {
+      newUser['avatar'] = await uploadImage(payload.avatar);
     }
 
     await updateDoc(doc(db, 'users', id), { ...newUser });
