@@ -26,10 +26,9 @@ const Subscription = () => {
   const subscription = useStore($subscription);
   const isSubscriptionsLoading = useStore(fetchSubscriptionFx.pending);
   const isTransactionsLoading = useStore(fetchTransactionsFx.pending);
-  const searchParams = useSearchParams();
+  const subscriptionId = useSearchParams()?.id as string;
 
   const nowDate = moment().format(FORMAT_DATE_PARSE);
-  const subscriptionId = searchParams?.id as string;
 
   const [pagesOffset, setPagesOffset] = useState(5);
   const [isVisibleSubscriptionEditModal, setIsVisibleSubscriptionEditModal] = useState(false);
