@@ -6,12 +6,10 @@ import { TransactionItem } from './TransactionItem';
 import { AddTransactionBlock } from './TransactionAddBlock';
 import { Loader } from '../UI/Loader';
 import { EmptyList } from '../UI/EmptyList';
-import { deleteTransactionFx } from '../../stores/TransactionStore';
 
 interface ITransactionsProps {
   transactions: ITransaction[];
   pagesOffset: number;
-  customStyles?: Record<string, string>;
   isLoading?: boolean;
   withoutCreate?: boolean;
   onChangePageOffset: (pagesOffset: number) => void;
@@ -25,7 +23,6 @@ const Transactions: FC<ITransactionsProps> = ({
   pagesOffset,
   isLoading,
   withoutCreate,
-  customStyles,
   onChangePageOffset,
   onDeleteTransaction,
 }) => {
@@ -43,7 +40,7 @@ const Transactions: FC<ITransactionsProps> = ({
   }, [transactions]);
 
   return (
-    <View style={{ ...styles.transactionsBox, ...customStyles }}>
+    <View style={styles.transactionsBox}>
       <View style={styles.transactionsTop}>
         <Text style={styles.transactionsTitle}>Transactions</Text>
 
