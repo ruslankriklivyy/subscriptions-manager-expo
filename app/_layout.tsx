@@ -1,4 +1,4 @@
-import { SplashScreen, Slot } from 'expo-router';
+import { SplashScreen, Slot, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StyleSheet, View } from 'react-native';
 import { Logs } from 'expo';
@@ -17,6 +17,7 @@ Logs.enableExpoCliLogging();
 
 export default function Layout() {
   const modal = useStore($modal);
+  const router = useRouter();
   const [user] = useAuthState(auth);
   const [fontsLoaded] = useFonts({
     'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
@@ -33,6 +34,7 @@ export default function Layout() {
     if (user) {
       UserService.getOne(user.uid).then((res) => {
         res && setUser(res);
+        router.push('/home');
       });
     }
   }, [user]);
