@@ -88,7 +88,7 @@ export const UserEditForm = () => {
   }, [user]);
 
   return (
-    <SafeAreaView style={styles.box}>
+    <SafeAreaView>
       <ScrollView>
         <View style={FormStyles.formControl}>
           <Controller
@@ -167,7 +167,6 @@ export const UserEditForm = () => {
 };
 
 const styles = StyleSheet.create({
-  box: {},
   logout: {
     marginTop: 20,
   },

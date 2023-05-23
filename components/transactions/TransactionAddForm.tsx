@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
 import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +17,7 @@ import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 import { $user } from '../../stores/UserStore';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+import { GeneralStyles } from '../../styles/GeneralStyles';
 
 interface ITransactionAddFormProps {
   onClose: () => void;
@@ -75,7 +76,7 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
   };
 
   return (
-    <SafeAreaView style={styles.box}>
+    <SafeAreaView style={GeneralStyles.box}>
       <ScrollView>
         <View>
           <MainHeader title={'Create a transaction'} onBack={onClose} />
@@ -125,11 +126,3 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  box: {
-    backgroundColor: '#fff',
-    flex: 1,
-    padding: 20,
-  },
-});

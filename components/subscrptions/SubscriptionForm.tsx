@@ -23,6 +23,7 @@ import {
 } from '../../stores/SubscriptionStore';
 import { Loader } from '../UI/Loader';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+import { GeneralStyles } from '../../styles/GeneralStyles';
 
 interface ISubscriptionFormProps {
   subscriptionId?: string;
@@ -103,12 +104,8 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
     subscriptionId && fetchSubscriptionFx(subscriptionId);
   }, [subscriptionId]);
 
-  // useEffect(() => {
-  //   subscription && defaultValues(subscription);
-  // }, [subscription]);
-
   return (
-    <SafeAreaView style={styles.box}>
+    <SafeAreaView style={GeneralStyles.box}>
       <MainHeader title={formTitle} onBack={onClose} />
 
       {isLoading && <Loader />}
@@ -244,11 +241,6 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
 };
 
 const styles = StyleSheet.create({
-  box: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
   title: {
     fontFamily: 'Poppins-Bold',
     fontWeight: '700',

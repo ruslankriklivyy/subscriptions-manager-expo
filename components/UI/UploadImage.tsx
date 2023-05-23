@@ -37,7 +37,7 @@ export const UploadImage: FC<IUploadImageProps> = ({ onChange, label, defaultVal
   }, [defaultValue]);
 
   return (
-    <View style={styles.box}>
+    <View>
       {label && <MainLabel label={label} />}
 
       {!image && (
@@ -60,7 +60,6 @@ export const UploadImage: FC<IUploadImageProps> = ({ onChange, label, defaultVal
 };
 
 const styles = StyleSheet.create({
-  box: {},
   pickImage: {
     padding: 20,
     justifyContent: 'center',
