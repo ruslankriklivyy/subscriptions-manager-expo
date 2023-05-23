@@ -8,7 +8,7 @@ export const FormStyles = StyleSheet.create({
     marginBottom: 40,
   },
   form: {
-    marginTop: 10,
+    flex: 1,
   },
   formControl: {
     marginBottom: 20,

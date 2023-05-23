@@ -11,9 +11,9 @@ export const MainModal: FC<IMainModalProps> = ({ children, isModalVisible, onClo
   return (
     <Modal
       animationType="slide"
-      transparent={true}
       visible={isModalVisible}
       onRequestClose={() => onClose()}
+      presentationStyle={'fullScreen'}
     >
       {children}
     </Modal>

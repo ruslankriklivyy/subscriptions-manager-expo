@@ -76,50 +76,48 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
 
   return (
     <SafeAreaView style={styles.box}>
-      <ScrollView>
-        <View>
-          <MainHeader title={'Create a transaction'} onBack={onClose} />
+      <ScrollView style={FormStyles.form}>
+        <MainHeader title={'Create a transaction'} onBack={onClose} />
 
-          <View style={FormStyles.formControl}>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                <MainInput
-                  isImportant
-                  value={value}
-                  isError={!!error}
-                  keyboardType={'numeric'}
-                  label={'Price'}
-                  placeholder={'Enter transaction price'}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              )}
-              name="price"
-            />
-            {errors.price && <FormErrorMessage errorMessage={errors.price.message} />}
-          </View>
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <MainInput
+                isImportant
+                value={value}
+                isError={!!error}
+                keyboardType={'numeric'}
+                label={'Price'}
+                placeholder={'Enter transaction price'}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
+            )}
+            name="price"
+          />
+          {errors.price && <FormErrorMessage errorMessage={errors.price.message} />}
+        </View>
 
-          <View style={FormStyles.formControl}>
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <DatePicker isImportant onChange={onChange} value={value} label={'Date'} />
-              )}
-              name="date"
-            />
-            {errors.date && <FormErrorMessage errorMessage={errors.date.message} />}
-          </View>
+        <View style={FormStyles.formControl}>
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <DatePicker isImportant onChange={onChange} value={value} label={'Date'} />
+            )}
+            name="date"
+          />
+          {errors.date && <FormErrorMessage errorMessage={errors.date.message} />}
+        </View>
 
-          <View style={FormStyles.formActions}>
-            <MainButton
-              isLoading={isCreating}
-              title={'Create'}
-              backgroundColor={'#33d71e'}
-              textColor={'#000'}
-              onPress={handleSubmit(onSubmit)}
-            />
-          </View>
+        <View style={FormStyles.formActions}>
+          <MainButton
+            isLoading={isCreating}
+            title={'Create'}
+            backgroundColor={'#33d71e'}
+            textColor={'#000'}
+            onPress={handleSubmit(onSubmit)}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

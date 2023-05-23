@@ -103,10 +103,6 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId, o
     subscriptionId && fetchSubscriptionFx(subscriptionId);
   }, [subscriptionId]);
 
-  // useEffect(() => {
-  //   subscription && defaultValues(subscription);
-  // }, [subscription]);
-
   return (
     <SafeAreaView style={styles.box}>
       <MainHeader title={formTitle} onBack={onClose} />
