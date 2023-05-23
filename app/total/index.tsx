@@ -71,14 +71,14 @@ const Total = () => {
                 ],
               }}
               width={800}
-              height={220}
+              height={240}
               yAxisLabel="$"
               yAxisInterval={1}
               chartConfig={{
                 backgroundColor: '#f3f3f3',
                 backgroundGradientFrom: '#f3f3f3',
                 backgroundGradientTo: '#f3f3f3',
-                decimalPlaces: 2, // optional, defaults to 2dp
+                decimalPlaces: 2,
                 color: () => `#004EEC`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 style: {
@@ -91,7 +91,6 @@ const Total = () => {
                 },
               }}
               style={{
-                marginBottom: 30,
                 marginVertical: 8,
                 borderRadius: 16,
               }}
@@ -124,6 +123,7 @@ const styles = StyleSheet.create({
   },
   lineChart: {
     flex: 1,
+    height: 220,
   },
   total: {
     marginVertical: 20,
