@@ -86,7 +86,6 @@ const Subscription = () => {
                 transactions={transactions}
                 onChangePageOffset={setPagesOffset}
                 onDeleteTransaction={onDeleteTransaction}
-                customStyles={{ height: '42%' }}
               />
             </View>
           </>
