@@ -59,33 +59,30 @@ const Subscription = () => {
           <>
             <MainHeader title={'Subscription'} />
 
-            <View style={styles.content}>
-              {subscription && (
-                <ExpandedSubscriptionItem
-                  subscription={subscription}
-                  onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
-                />
-              )}
+            {subscription && (
+              <ExpandedSubscriptionItem
+                subscription={subscription}
+                onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
+              />
+            )}
 
-              <View style={styles.expenses}>
-                <View style={styles.expensesLeft}>
-                  <Text style={styles.expensesTitle}>Expenses</Text>
+            <View style={styles.expenses}>
+              <View>
+                <Text style={styles.expensesTitle}>Expenses</Text>
 
-                  <Text style={styles.expensesDate}>{nowDate}</Text>
-                </View>
-
-                <View style={styles.expensesRight}>
-                  <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
-                </View>
+                <Text style={styles.expensesDate}>{nowDate}</Text>
               </View>
 
+              <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+            </View>
+
+            <View style={styles.transactions}>
               <Transactions
                 pagesOffset={pagesOffset}
                 isLoading={isTransactionsLoading}
                 transactions={transactions}
                 onChangePageOffset={setPagesOffset}
                 onDeleteTransaction={onDeleteTransaction}
-                customStyles={{ height: '42%' }}
               />
             </View>
           </>
@@ -109,15 +106,11 @@ export default Subscription;
 
 const styles = StyleSheet.create({
   box: {
-    paddingTop: 60,
+    paddingTop: 40,
     paddingHorizontal: 20,
     flex: 1,
   },
-  content: {
-    paddingTop: 20,
-  },
   expenses: {
-    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -127,7 +120,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#f3f3f3',
   },
-  expensesLeft: {},
   expensesTitle: {
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',
@@ -138,10 +130,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     opacity: 0.5,
   },
-  expensesRight: {},
   expensesTotal: {
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',
     fontSize: 18,
+  },
+  transactions: {
+    flex: 1,
+    marginTop: 20,
   },
 });

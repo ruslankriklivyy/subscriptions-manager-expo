@@ -71,7 +71,7 @@ export default Home;
 const styles = StyleSheet.create({
   box: {
     flex: 1,
-    paddingTop: 60,
+    paddingTop: 40,
     paddingHorizontal: 20,
   },
   top: {

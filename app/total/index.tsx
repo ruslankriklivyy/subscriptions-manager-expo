@@ -53,8 +53,9 @@ const Total = () => {
       {isLoadingExpensesStatistic && <Loader />}
 
       {!isLoadingExpensesStatistic && totalExpensesStatistic?.length > 0 && (
-        <View style={styles.content}>
+        <>
           <ScrollView
+            style={styles.lineChart}
             horizontal={true}
             contentOffset={{ x: 10000, y: 0 }}
             showsHorizontalScrollIndicator={false}
@@ -97,7 +98,9 @@ const Total = () => {
             />
           </ScrollView>
 
-          <TotalCard total={totalExpenses} />
+          <View style={styles.total}>
+            <TotalCard total={totalExpenses} />
+          </View>
 
           <Transactions
             withoutCreate
@@ -107,7 +110,7 @@ const Total = () => {
             onChangePageOffset={setPagesOffset}
             onDeleteTransaction={onDeleteTransaction}
           />
-        </View>
+        </>
       )}
     </SafeAreaView>
   );
@@ -116,10 +119,15 @@ const Total = () => {
 const styles = StyleSheet.create({
   box: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 40,
     paddingHorizontal: 20,
   },
-  content: {},
+  lineChart: {
+    flex: 1,
+  },
+  total: {
+    marginVertical: 20,
+  },
   title: {
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',

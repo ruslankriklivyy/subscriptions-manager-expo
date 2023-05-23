@@ -80,6 +80,7 @@ export default Subscriptions;
 const styles = StyleSheet.create({
   subscriptions: {
     marginTop: 20,
+    flex: 1,
   },
   top: {
     marginBottom: 20,
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   contentContainer: {
-    height: '74%',
+    flex: 1,
   },
   loaderFooter: {
     height: 90,

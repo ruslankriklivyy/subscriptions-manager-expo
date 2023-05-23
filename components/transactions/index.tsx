@@ -10,7 +10,6 @@ import { EmptyList } from '../UI/EmptyList';
 interface ITransactionsProps {
   transactions: ITransaction[];
   pagesOffset: number;
-  customStyles?: Record<string, string>;
   isLoading?: boolean;
   withoutCreate?: boolean;
   onChangePageOffset: (pagesOffset: number) => void;
@@ -22,7 +21,6 @@ const Transactions: FC<ITransactionsProps> = ({
   pagesOffset,
   isLoading,
   withoutCreate,
-  customStyles,
   onChangePageOffset,
   onDeleteTransaction,
 }) => {
@@ -32,7 +30,7 @@ const Transactions: FC<ITransactionsProps> = ({
   };
 
   return (
-    <View style={{ ...styles.transactionsBox, ...customStyles }}>
+    <View style={styles.transactionsBox}>
       <View style={styles.transactionsTop}>
         <Text style={styles.transactionsTitle}>Transactions</Text>
 
@@ -41,6 +39,7 @@ const Transactions: FC<ITransactionsProps> = ({
 
       <FlatList
         data={transactions}
+        contentContainerStyle={styles.transactions}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
@@ -65,8 +64,7 @@ export default Transactions;
 
 const styles = StyleSheet.create({
   transactionsBox: {
-    marginTop: 20,
-    height: '44%',
+    flex: 1,
   },
   transactionsTop: {
     flexDirection: 'row',
@@ -84,10 +82,6 @@ const styles = StyleSheet.create({
     height: 80,
   },
 
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-  },
   backTextWhite: {
     color: '#FFF',
   },
