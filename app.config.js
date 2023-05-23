@@ -36,13 +36,11 @@ export default {
     assetBundlePatterns: ['**/*'],
     ios: {
       bundleIdentifier: 'com.subscriptionsManager',
-      googleServicesFile: './GoogleService-Info.plist',
       buildNumber: '1.0.0',
       supportsTablet: true,
     },
     android: {
       package: 'com.subscriptionsManager',
-      googleServicesFile: './google-services.json',
       versionCode: 1,
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',

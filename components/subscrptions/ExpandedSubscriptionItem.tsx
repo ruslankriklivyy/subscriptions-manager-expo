@@ -2,12 +2,12 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { FC } from 'react';
-import { useStore } from 'effector-react';
 
 import { MainButton } from '../UI/MainButton';
 import { ISubscription } from '../../types/entities/Subscription';
 import { deleteSubscriptionFx, fetchSubscriptionsFx } from '../../stores/SubscriptionStore';
 import { formatDate } from '../../utils/format-date';
+import { useStore } from 'effector-react';
 import { $user } from '../../stores/UserStore';
 
 interface IExpandedSubscriptionItemProps {
