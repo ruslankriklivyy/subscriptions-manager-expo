@@ -1,5 +1,5 @@
-import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
-import { FC, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FC } from 'react';
 
 import { ITransaction } from '../../types/entities/Transaction';
 import { TransactionItem } from './TransactionItem';
@@ -16,8 +16,6 @@ interface ITransactionsProps {
   onDeleteTransaction: (id: string) => void;
 }
 
-const rowTranslateAnimatedValues = {};
-
 const Transactions: FC<ITransactionsProps> = ({
   transactions,
   pagesOffset,
@@ -30,14 +28,6 @@ const Transactions: FC<ITransactionsProps> = ({
     if (pagesOffset > transactions?.length) return;
     onChangePageOffset(pagesOffset + 5);
   };
-
-  useEffect(() => {
-    if (transactions && transactions?.length) {
-      transactions.forEach((transaction) => {
-        rowTranslateAnimatedValues[`${transaction.id}`] = new Animated.Value(1);
-      });
-    }
-  }, [transactions]);
 
   return (
     <View style={styles.transactionsBox}>
@@ -74,7 +64,7 @@ export default Transactions;
 const styles = StyleSheet.create({
   transactionsBox: {
     marginTop: 20,
-    height: '44%',
+    flex: 1,
   },
   transactionsTop: {
     flexDirection: 'row',
@@ -87,48 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 21,
   },
-  transactions: {},
   loaderFooter: {
     height: 80,
-  },
-
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-  },
-  backTextWhite: {
-    color: '#FFF',
-  },
-  rowFront: {
-    alignItems: 'center',
-    backgroundColor: '#CCC',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    height: 50,
-    borderRadius: 8,
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: 'red',
-    height: 73,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-    borderRadius: 8,
-    zIndex: 0,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-    borderRadius: 8,
-  },
-  backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 0,
   },
 });

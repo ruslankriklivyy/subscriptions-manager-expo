@@ -1,4 +1,4 @@
-import { IFirebaseImage } from '../common/IFirebaseImage';
+import { IFirebaseImage } from '../common/FirebaseImage';
 
 export interface IUser {
   id: string;

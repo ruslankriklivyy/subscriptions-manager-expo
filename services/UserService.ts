@@ -6,7 +6,7 @@ import { IUser } from '../types/entities/User';
 import { IUserEditFormValues } from '../components/user/UserEditForm';
 import { uploadImage } from '../utils/upload-image';
 import { ImagePickerAsset } from 'expo-image-picker/src/ImagePicker.types';
-import { IFirebaseImage } from '../types/common/IFirebaseImage';
+import { IFirebaseImage } from '../types/common/FirebaseImage';
 
 class UserService {
   async getOne(id: string) {

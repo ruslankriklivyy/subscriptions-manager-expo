@@ -80,7 +80,7 @@ class SubscriptionService {
     const transactions = query(collection(db, 'transactions'), where('subscription_id', '==', id));
     const docs = await getDocs(transactions);
 
-    docs.docs.map((item) => {
+    docs.docs.forEach((item) => {
       return deleteDoc(item.ref);
     });
 

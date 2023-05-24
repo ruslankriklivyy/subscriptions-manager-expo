@@ -50,27 +50,25 @@ const Subscriptions: FC<ISubscriptionsProps> = ({
         </View>
       </View>
 
-      <View style={styles.contentContainer}>
-        {items && (
-          <FlatList
-            data={items}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => <SubscriptionItem subscription={item} />}
-            ListEmptyComponent={!isLoading && EmptyList}
-            ListFooterComponent={() =>
-              isLoading &&
-              !items && (
-                <View style={styles.loaderFooter}>
-                  <Loader />
-                </View>
-              )
-            }
-            onEndReached={() => onHandleChangePageOffset()}
-            keyExtractor={(item) => item.id}
-          />
-        )}
-      </View>
+      {items && (
+        <FlatList
+          data={items}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => <SubscriptionItem subscription={item} />}
+          ListEmptyComponent={!isLoading && EmptyList}
+          ListFooterComponent={() =>
+            isLoading &&
+            !items && (
+              <View style={styles.loaderFooter}>
+                <Loader />
+              </View>
+            )
+          }
+          onEndReached={() => onHandleChangePageOffset()}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 };
@@ -80,6 +78,7 @@ export default Subscriptions;
 const styles = StyleSheet.create({
   subscriptions: {
     marginTop: 20,
+    flex: 1,
   },
   top: {
     marginBottom: 20,
@@ -91,9 +90,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',
     fontSize: 18,
-  },
-  contentContainer: {
-    height: '74%',
   },
   loaderFooter: {
     height: 90,

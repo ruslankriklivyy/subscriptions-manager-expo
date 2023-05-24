@@ -60,34 +60,32 @@ const Subscription = () => {
           <>
             <MainHeader title={'Subscription'} />
 
-            <View style={styles.content}>
-              {subscription && (
-                <ExpandedSubscriptionItem
-                  subscription={subscription}
-                  onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
-                />
-              )}
+            {subscription && (
+              <ExpandedSubscriptionItem
+                subscription={subscription}
+                onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
+              />
+            )}
 
-              <View style={styles.expenses}>
-                <View style={styles.expensesLeft}>
-                  <Text style={styles.expensesTitle}>Expenses</Text>
+            <View style={styles.expenses}>
+              <View style={styles.expensesLeft}>
+                <Text style={styles.expensesTitle}>Expenses</Text>
 
-                  <Text style={styles.expensesDate}>{nowDate}</Text>
-                </View>
-
-                <View style={styles.expensesRight}>
-                  <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
-                </View>
+                <Text style={styles.expensesDate}>{nowDate}</Text>
               </View>
 
-              <Transactions
-                pagesOffset={pagesOffset}
-                isLoading={isTransactionsLoading}
-                transactions={transactions}
-                onChangePageOffset={setPagesOffset}
-                onDeleteTransaction={onDeleteTransaction}
-              />
+              <View style={styles.expensesRight}>
+                <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+              </View>
             </View>
+
+            <Transactions
+              pagesOffset={pagesOffset}
+              isLoading={isTransactionsLoading}
+              transactions={transactions}
+              onChangePageOffset={setPagesOffset}
+              onDeleteTransaction={onDeleteTransaction}
+            />
           </>
         )}
       </SafeAreaView>
@@ -109,12 +107,9 @@ export default Subscription;
 
 const styles = StyleSheet.create({
   box: {
-    paddingTop: 60,
+    paddingTop: 40,
     paddingHorizontal: 20,
     flex: 1,
-  },
-  content: {
-    paddingTop: 20,
   },
   expenses: {
     marginTop: 20,

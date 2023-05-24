@@ -53,11 +53,12 @@ const Total = () => {
       {isLoadingExpensesStatistic && <Loader />}
 
       {!isLoadingExpensesStatistic && totalExpensesStatistic?.length > 0 && (
-        <View style={styles.content}>
+        <>
           <ScrollView
             horizontal={true}
             contentOffset={{ x: 10000, y: 0 }}
             showsHorizontalScrollIndicator={false}
+            style={styles.lineChart}
           >
             <LineChart
               bezier
@@ -70,7 +71,7 @@ const Total = () => {
                 ],
               }}
               width={800}
-              height={220}
+              height={180}
               yAxisLabel="$"
               yAxisInterval={1}
               chartConfig={{
@@ -107,7 +108,7 @@ const Total = () => {
             onChangePageOffset={setPagesOffset}
             onDeleteTransaction={onDeleteTransaction}
           />
-        </View>
+        </>
       )}
     </SafeAreaView>
   );
@@ -116,10 +117,13 @@ const Total = () => {
 const styles = StyleSheet.create({
   box: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 40,
     paddingHorizontal: 20,
   },
-  content: {},
+  lineChart: {
+    height: 180,
+    flex: 1,
+  },
   title: {
     fontFamily: 'Poppins-SemiBold',
     fontWeight: '600',

@@ -19,7 +19,7 @@ import { IUser } from '../../types/entities/User';
 import { auth } from '../../config/firebase';
 import { UploadImage } from '../UI/UploadImage';
 import { setModal } from '../../stores/ModalStore';
-import { IFirebaseImage } from '../../types/common/IFirebaseImage';
+import { IFirebaseImage } from '../../types/common/FirebaseImage';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 
 export interface IUserEditFormValues {
