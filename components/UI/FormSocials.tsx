@@ -1,36 +1,61 @@
 import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
-import { useEffect } from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import { useAuthRequest } from 'expo-auth-session/providers/google';
+import { useRouter } from 'expo-router';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import firebase from 'firebase/compat';
+import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+import { signInWithCredential } from 'firebase/auth';
 import Constants from 'expo-constants';
 
 import { MainButton } from './MainButton';
-import AuthService from '../../services/AuthService';
+import { setModal } from '../../stores/ModalStore';
+import userService from '../../services/UserService';
+import { setUser } from '../../stores/UserStore';
+import { auth } from '../../config/firebase';
 
-WebBrowser.maybeCompleteAuthSession();
+GoogleSignin.configure({
+  scopes: ['email', 'profile'],
+  offlineAccess: true,
+  webClientId: Constants?.expoConfig?.extra?.FIREBASE_WEB_CLIENT_ID,
+});
 
 export const FormSocials = () => {
-  const [request, response, promptAsync] = useAuthRequest({
-    androidClientId: Constants?.expoConfig?.extra?.FIREBASE_ANDROID_CLIENT_ID,
-    expoClientId: Constants?.expoConfig?.extra?.GOOGLE_AUTH_CLIENT_ID,
-    iosClientId: Constants?.expoConfig?.extra?.GOOGLE_AUTH_IOS_CLIENT_ID,
-  });
+  const router = useRouter();
 
-  useEffect(() => {
-    if (response?.type === 'success') {
-      AuthService.googleAuth(response.authentication.accessToken);
+  const handleGoogleAuth = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
+      const userGoogleInfo = await GoogleSignin.signIn();
+      const googleCredential = GoogleAuthProvider.credential(userGoogleInfo.idToken);
+
+      await signInWithCredential(auth, googleCredential);
+      await userService.create(
+        {
+          uid: userGoogleInfo.user.id,
+          email: userGoogleInfo.user.email,
+          displayName: userGoogleInfo.user.givenName,
+          avatar: { url: userGoogleInfo.user.photo },
+        },
+        'google'
+      );
+
+      const user = await userService.getOne(userGoogleInfo.user.id);
+      setUser(user);
+      router.push('/home');
+    } catch (error) {
+      console.log(error);
+      setModal({ message: error.message, type: 'error' });
     }
-  }, [response]);
+  };
 
   return (
     <>
       <MainButton
-        disabled={!request}
         title={'Sign up with Google'}
         type={'outlined'}
         Icon={<AntDesign name="google" size={26} />}
-        onPress={() => promptAsync()}
+        onPress={handleGoogleAuth}
       />
 
       <View style={styles.socialsBottom}>

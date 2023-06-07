@@ -41,7 +41,7 @@ const Home = () => {
     }
   }, [user]);
 
-  if (!user) {
+  if (!userStore) {
     return <Loader />;
   }
 

@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -57,69 +57,73 @@ const SignIn = () => {
   };
 
   return (
-    <View style={AuthStyles.box}>
-      <Text style={FormStyles.title}>Sign In</Text>
+    <SafeAreaView>
+      <ScrollView>
+        <View style={AuthStyles.box}>
+          <Text style={FormStyles.title}>Sign In</Text>
 
-      <View>
-        <FormSocials />
+          <View>
+            <FormSocials />
 
-        <View style={FormStyles.formControl}>
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-              <MainInput
-                isImportant
-                value={value}
-                isError={!!error}
-                label={'Email'}
-                placeholder={'Enter your email'}
-                onChangeText={onChange}
-                onBlur={onBlur}
+            <View style={FormStyles.formControl}>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                  <MainInput
+                    isImportant
+                    value={value}
+                    isError={!!error}
+                    label={'Email'}
+                    placeholder={'Enter your email'}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+                name="email"
               />
-            )}
-            name="email"
-          />
-          {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
-        </View>
+              {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
+            </View>
 
-        <View style={FormStyles.formControl}>
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-              <MainInput
-                isImportant
-                isSecureTextEntry
-                value={value}
-                isError={!!error}
-                label={'Password'}
-                placeholder={'Enter your password'}
-                onChangeText={onChange}
-                onBlur={onBlur}
+            <View style={FormStyles.formControl}>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                  <MainInput
+                    isImportant
+                    isSecureTextEntry
+                    value={value}
+                    isError={!!error}
+                    label={'Password'}
+                    placeholder={'Enter your password'}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+                name="password"
               />
-            )}
-            name="password"
-          />
-          {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
-        </View>
+              {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
+            </View>
 
-        <View style={FormStyles.formActions}>
-          <MainButton
-            isLoading={isLoading}
-            title={'Send'}
-            backgroundColor={'#004EEC'}
-            onPress={handleSubmit(onSubmit)}
-          />
+            <View style={FormStyles.formActions}>
+              <MainButton
+                isLoading={isLoading}
+                title={'Send'}
+                backgroundColor={'#004EEC'}
+                onPress={handleSubmit(onSubmit)}
+              />
 
-          <View style={AuthStyles.linkToSingIn}>
-            <Text style={AuthStyles.text}>Are you not have an account?</Text>
+              <View style={AuthStyles.linkToSingIn}>
+                <Text style={AuthStyles.text}>Are you not have an account?</Text>
 
-            <Pressable onPress={() => router.push('/auth/signup')}>
-              <Text style={AuthStyles.link}>Sign Up</Text>
-            </Pressable>
+                <Pressable onPress={() => router.push('/auth/signup')}>
+                  <Text style={AuthStyles.link}>Sign Up</Text>
+                </Pressable>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -1,12 +1,10 @@
 import { query, collection, getDocs, setDoc, updateDoc, where, doc } from '@firebase/firestore';
-import { User } from '@firebase/auth';
+import { ImagePickerAsset } from 'expo-image-picker/src/ImagePicker.types';
 
 import { db } from '../config/firebase';
 import { IUser } from '../types/entities/User';
 import { IUserEditFormValues } from '../components/user/UserEditForm';
 import { uploadImage } from '../utils/upload-image';
-import { ImagePickerAsset } from 'expo-image-picker/src/ImagePicker.types';
-import { IFirebaseImage } from '../types/common/FirebaseImage';
 
 class UserService {
   async getOne(id: string) {
@@ -15,8 +13,11 @@ class UserService {
     return docs.docs.map((doc) => doc.data())[0] as IUser;
   }
 
-  async create(payload: User & { avatar: ImagePickerAsset | null }) {
-    const q = query(collection(db, 'users'), where('id', '==', payload.uid));
+  async create(
+    payload: any & { avatar: ImagePickerAsset | null },
+    userType?: 'google' | 'default'
+  ) {
+    const q = query(collection(db, 'users'), where('email', '==', payload.email));
     const docs = await getDocs(q);
 
     if (docs.docs.length === 0) {
@@ -29,8 +30,12 @@ class UserService {
         email: payload.email,
       };
 
-      if (payload.avatar) {
+      if (payload.avatar && userType === 'default') {
         newUser['avatar'] = await uploadImage(payload.avatar);
+      }
+
+      if (payload.avatar && userType === 'google') {
+        newUser['avatar'] = payload.avatar;
       }
 
       await setDoc(userRef, newUser);

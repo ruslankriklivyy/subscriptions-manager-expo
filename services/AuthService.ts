@@ -1,14 +1,9 @@
-import axios from 'axios';
-
-import UserService from './UserService';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 class AuthService {
-  static async googleAuth(token: string) {
-    const { data } = await axios.get('https://www.googleapis.com/userinfo/v2/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    await UserService.create(data);
+  static async googleAuth() {
+    await GoogleSignin.hasPlayServices();
+    return await GoogleSignin.signIn();
   }
 }
 

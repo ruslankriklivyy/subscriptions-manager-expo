@@ -4,8 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import { Logs } from 'expo';
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useStore } from 'effector-react';
 
+import { useStore } from 'effector-react';
 import { auth } from '../config/firebase';
 import UserService from '../services/UserService';
 import { setUser } from '../stores/UserStore';

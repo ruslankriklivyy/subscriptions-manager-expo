@@ -54,49 +54,50 @@ const Total = () => {
 
       {!isLoadingExpensesStatistic && totalExpensesStatistic?.length > 0 && (
         <>
-          <ScrollView
-            horizontal={true}
-            contentOffset={{ x: 10000, y: 0 }}
-            showsHorizontalScrollIndicator={false}
-            style={styles.lineChart}
-          >
-            <LineChart
-              bezier
-              data={{
-                labels: MONTHS_ARR,
-                datasets: [
-                  {
-                    data: totalExpensesStatistic,
+          <View style={styles.lineChart}>
+            <ScrollView
+              horizontal={true}
+              contentOffset={{ x: 10000, y: 0 }}
+              showsHorizontalScrollIndicator={false}
+            >
+              <LineChart
+                bezier
+                data={{
+                  labels: MONTHS_ARR,
+                  datasets: [
+                    {
+                      data: totalExpensesStatistic,
+                    },
+                  ],
+                }}
+                width={800}
+                height={180}
+                yAxisLabel="$"
+                yAxisInterval={1}
+                chartConfig={{
+                  backgroundColor: '#f3f3f3',
+                  backgroundGradientFrom: '#f3f3f3',
+                  backgroundGradientTo: '#f3f3f3',
+                  decimalPlaces: 2, // optional, defaults to 2dp
+                  color: () => `#004EEC`,
+                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  style: {
+                    borderRadius: 16,
                   },
-                ],
-              }}
-              width={800}
-              height={180}
-              yAxisLabel="$"
-              yAxisInterval={1}
-              chartConfig={{
-                backgroundColor: '#f3f3f3',
-                backgroundGradientFrom: '#f3f3f3',
-                backgroundGradientTo: '#f3f3f3',
-                decimalPlaces: 2, // optional, defaults to 2dp
-                color: () => `#004EEC`,
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                style: {
+                  propsForDots: {
+                    r: '5',
+                    strokeWidth: '1',
+                    stroke: '#004EEC',
+                  },
+                }}
+                style={{
+                  marginBottom: 30,
+                  marginVertical: 8,
                   borderRadius: 16,
-                },
-                propsForDots: {
-                  r: '5',
-                  strokeWidth: '1',
-                  stroke: '#004EEC',
-                },
-              }}
-              style={{
-                marginBottom: 30,
-                marginVertical: 8,
-                borderRadius: 16,
-              }}
-            />
-          </ScrollView>
+                }}
+              />
+            </ScrollView>
+          </View>
 
           <TotalCard total={totalExpenses} />
 
@@ -121,8 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   lineChart: {
-    height: 180,
-    flex: 1,
+    height: 220,
   },
   title: {
     fontFamily: 'Poppins-SemiBold',
