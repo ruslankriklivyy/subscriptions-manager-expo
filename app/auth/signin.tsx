@@ -14,6 +14,7 @@ import { FormStyles } from '../../styles/FormStyles';
 import { signInFx } from '../../stores/AuthStore';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
 import { setModal } from '../../stores/ModalStore';
+import { GeneralStyles } from '../../styles/GeneralStyles';
 
 interface ISignInFormValues {
   email: string;
@@ -57,73 +58,71 @@ const SignIn = () => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View style={AuthStyles.box}>
-          <Text style={FormStyles.title}>Sign In</Text>
+    <ScrollView contentContainerStyle={GeneralStyles.scrollViewBox}>
+      <View style={AuthStyles.box}>
+        <Text style={FormStyles.title}>Sign In</Text>
 
-          <View>
-            <FormSocials />
+        <View>
+          <FormSocials />
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isImportant
-                    value={value}
-                    isError={!!error}
-                    label={'Email'}
-                    placeholder={'Enter your email'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="email"
-              />
-              {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
-            </View>
+          <View style={FormStyles.formControl}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <MainInput
+                  isImportant
+                  value={value}
+                  isError={!!error}
+                  label={'Email'}
+                  placeholder={'Enter your email'}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              )}
+              name="email"
+            />
+            {errors.email && <FormErrorMessage errorMessage={errors.email.message} />}
+          </View>
 
-            <View style={FormStyles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                  <MainInput
-                    isImportant
-                    isSecureTextEntry
-                    value={value}
-                    isError={!!error}
-                    label={'Password'}
-                    placeholder={'Enter your password'}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                )}
-                name="password"
-              />
-              {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
-            </View>
+          <View style={FormStyles.formControl}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <MainInput
+                  isImportant
+                  isSecureTextEntry
+                  value={value}
+                  isError={!!error}
+                  label={'Password'}
+                  placeholder={'Enter your password'}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+              )}
+              name="password"
+            />
+            {errors.password && <FormErrorMessage errorMessage={errors.password.message} />}
+          </View>
 
-            <View style={FormStyles.formActions}>
-              <MainButton
-                isLoading={isLoading}
-                title={'Send'}
-                backgroundColor={'#004EEC'}
-                onPress={handleSubmit(onSubmit)}
-              />
+          <View style={FormStyles.formActions}>
+            <MainButton
+              isLoading={isLoading}
+              title={'Send'}
+              backgroundColor={'#004EEC'}
+              onPress={handleSubmit(onSubmit)}
+            />
 
-              <View style={AuthStyles.linkToSingIn}>
-                <Text style={AuthStyles.text}>Are you not have an account?</Text>
+            <View style={AuthStyles.linkToSingIn}>
+              <Text style={AuthStyles.text}>Are you not have an account?</Text>
 
-                <Pressable onPress={() => router.push('/auth/signup')}>
-                  <Text style={AuthStyles.link}>Sign Up</Text>
-                </Pressable>
-              </View>
+              <Pressable onPress={() => router.push('/auth/signup')}>
+                <Text style={AuthStyles.link}>Sign Up</Text>
+              </Pressable>
             </View>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 };
 

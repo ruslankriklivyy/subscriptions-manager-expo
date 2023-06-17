@@ -1,8 +1,8 @@
-import { Modal } from 'react-native';
 import { useState } from 'react';
 
 import { SubscriptionForm } from './SubscriptionForm';
 import { AddButton } from '../UI/AddButton';
+import { MainModal } from '../UI/MainModal';
 
 export const SubscriptionAddBlock = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -11,14 +11,9 @@ export const SubscriptionAddBlock = () => {
     <>
       <AddButton onPress={() => setIsModalVisible(true)} />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(!isModalVisible)}
-      >
+      <MainModal isModalVisible={isModalVisible} onClose={() => setIsModalVisible(false)}>
         <SubscriptionForm onClose={() => setIsModalVisible(false)} />
-      </Modal>
+      </MainModal>
     </>
   );
 };

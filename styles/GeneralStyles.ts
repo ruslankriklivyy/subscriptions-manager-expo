@@ -6,4 +6,8 @@ export const GeneralStyles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
+  scrollViewBox: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
 });

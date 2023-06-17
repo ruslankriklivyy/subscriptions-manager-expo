@@ -44,7 +44,6 @@ export const FormSocials = () => {
       setUser(user);
       router.push('/home');
     } catch (error) {
-      console.log(error);
       setModal({ message: error.message, type: 'error' });
     }
   };

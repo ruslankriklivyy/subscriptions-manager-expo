@@ -1,4 +1,4 @@
-import { Modal } from 'react-native';
+import { Dimensions, Modal, View } from 'react-native';
 import { ReactNode, FC } from 'react';
 
 interface IMainModalProps {
@@ -10,12 +10,14 @@ interface IMainModalProps {
 export const MainModal: FC<IMainModalProps> = ({ children, isModalVisible, onClose }) => {
   return (
     <Modal
+      transparent
       animationType="slide"
-      transparent={true}
       visible={isModalVisible}
       onRequestClose={() => onClose()}
     >
-      {children}
+      <View style={{ height: Dimensions.get('window').height, backgroundColor: '#fff' }}>
+        {children}
+      </View>
     </Modal>
   );
 };
