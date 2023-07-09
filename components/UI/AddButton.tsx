@@ -8,7 +8,7 @@ interface IAddButtonProps {
 export const AddButton: FC<IAddButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity activeOpacity={0.7} style={styles.addBtn} onPress={onPress}>
-      <Image style={styles.addBtnIcon} source={require('../../assets/plus.png')} />
+      <Image style={styles.addBtnIcon} source={require('../../assets/icons/plus.png')} />
     </TouchableOpacity>
   );
 };

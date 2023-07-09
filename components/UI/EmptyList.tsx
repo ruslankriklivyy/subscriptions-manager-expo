@@ -1,9 +1,8 @@
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 export const EmptyList = () => {
   return (
     <View style={styles.box}>
-      <Image source={require('../../assets/empty.png')} style={styles.image} />
       <Text style={styles.text}>Empty</Text>
     </View>
   );
@@ -14,10 +13,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
-  },
-  image: {
-    width: 70,
-    height: 70,
   },
   text: {
     marginTop: 10,
