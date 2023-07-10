@@ -14,14 +14,12 @@ interface IExpandedSubscriptionItemProps {
   isView?: boolean;
   subscription: ISubscription;
   onPress?: () => void;
-  onPressEdit?: () => void;
 }
 
 export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
   isView = false,
   subscription,
   onPress,
-  onPressEdit,
 }) => {
   const user = useStore($user);
   const router = useRouter();
@@ -87,7 +85,15 @@ export const ExpandedSubscriptionItem: FC<IExpandedSubscriptionItemProps> = ({
               }
             />
           ) : (
-            <MainButton title={'Edit'} onPress={() => onPressEdit()} />
+            <MainButton
+              title={'Edit'}
+              onPress={() =>
+                router.push({
+                  pathname: '/subscriptions/editSubscription',
+                  params: { id: subscription.id },
+                })
+              }
+            />
           )}
         </View>
 

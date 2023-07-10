@@ -17,8 +17,6 @@ import {
   fetchTransactionsFx,
 } from '../../stores/TransactionStore';
 import { FORMAT_DATE_PARSE } from '../../config/consts';
-import { MainModal } from '../../components/UI/MainModal';
-import { SubscriptionForm } from '../../components/subscrptions/SubscriptionForm';
 
 const Subscription = () => {
   const totalExpenses = useStore($totalExpenses);
@@ -31,7 +29,6 @@ const Subscription = () => {
   const nowDate = moment().format(FORMAT_DATE_PARSE);
 
   const [pagesOffset, setPagesOffset] = useState(5);
-  const [isVisibleSubscriptionEditModal, setIsVisibleSubscriptionEditModal] = useState(false);
 
   const onDeleteTransaction = async (id: string) => {
     await deleteTransactionFx(id);
@@ -51,54 +48,37 @@ const Subscription = () => {
   }, [transactions]);
 
   return (
-    <>
-      <SafeAreaView style={styles.box}>
-        {isSubscriptionsLoading && <Loader />}
+    <SafeAreaView style={styles.box}>
+      {isSubscriptionsLoading && <Loader />}
 
-        {!isSubscriptionsLoading && subscription && (
-          <>
-            <MainHeader title={'Subscription'} />
+      {!isSubscriptionsLoading && subscription && (
+        <>
+          <MainHeader title={'Subscription'} />
 
-            {subscription && (
-              <ExpandedSubscriptionItem
-                subscription={subscription}
-                onPressEdit={() => setIsVisibleSubscriptionEditModal(true)}
-              />
-            )}
+          {subscription && <ExpandedSubscriptionItem subscription={subscription} />}
 
-            <View style={styles.expenses}>
-              <View>
-                <Text style={styles.expensesTitle}>Expenses</Text>
+          <View style={styles.expenses}>
+            <View>
+              <Text style={styles.expensesTitle}>Expenses</Text>
 
-                <Text style={styles.expensesDate}>{nowDate}</Text>
-              </View>
-
-              <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+              <Text style={styles.expensesDate}>{nowDate}</Text>
             </View>
 
-            <View style={styles.transactions}>
-              <Transactions
-                pagesOffset={pagesOffset}
-                isLoading={isTransactionsLoading}
-                transactions={transactions}
-                onChangePageOffset={setPagesOffset}
-                onDeleteTransaction={onDeleteTransaction}
-              />
-            </View>
-          </>
-        )}
-      </SafeAreaView>
+            <Text style={styles.expensesTotal}>-${totalExpenses}</Text>
+          </View>
 
-      <MainModal
-        isModalVisible={isVisibleSubscriptionEditModal}
-        onClose={() => setIsVisibleSubscriptionEditModal(false)}
-      >
-        <SubscriptionForm
-          subscriptionId={subscriptionId}
-          onClose={() => setIsVisibleSubscriptionEditModal(false)}
-        />
-      </MainModal>
-    </>
+          <View style={styles.transactions}>
+            <Transactions
+              pagesOffset={pagesOffset}
+              isLoading={isTransactionsLoading}
+              transactions={transactions}
+              onChangePageOffset={setPagesOffset}
+              onDeleteTransaction={onDeleteTransaction}
+            />
+          </View>
+        </>
+      )}
+    </SafeAreaView>
   );
 };
 

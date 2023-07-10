@@ -2,7 +2,6 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FC } from 'react';
 import { useStore } from 'effector-react';
 import moment from 'moment';
 
@@ -17,10 +16,6 @@ import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 import { $user } from '../../stores/UserStore';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
-
-interface ITransactionAddFormProps {
-  onClose: () => void;
-}
 
 export interface ICreateTransactionFormValues {
   date: Date;
@@ -45,7 +40,7 @@ const defaultValues: ICreateTransactionFormValues = {
   user_id: '',
 };
 
-export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) => {
+export const TransactionAddForm = () => {
   const {
     control,
     handleSubmit,
@@ -71,13 +66,12 @@ export const TransactionAddForm: FC<ITransactionAddFormProps> = ({ onClose }) =>
       },
     });
     await fetchTransactionsFx({ subscriptionId: subscription.id, offset: 5 });
-    onClose();
   };
 
   return (
     <SafeAreaView style={styles.box}>
       <ScrollView style={FormStyles.form}>
-        <MainHeader title={'Create a transaction'} onBack={onClose} />
+        <MainHeader title={'Create a transaction'} />
 
         <View style={FormStyles.formControl}>
           <Controller
@@ -128,6 +122,7 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: '#fff',
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 40,
   },
 });

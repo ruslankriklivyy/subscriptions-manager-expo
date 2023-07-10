@@ -1,31 +1,34 @@
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { z } from 'zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FC, useEffect, useMemo } from 'react';
 import { useStore } from 'effector-react';
 
-import { FormStyles } from '../../styles/FormStyles';
-import { MainInput } from '../UI/MainInput';
-import { FormErrorMessage } from '../UI/FormErrorMessage';
-import { MainButton } from '../UI/MainButton';
-import { DatePicker } from '../UI/DatePicker';
-import { MainHeader } from '../UI/MainHeader';
-import { ControlColor } from '../UI/ControlColor';
-import { UploadImage } from '../UI/UploadImage';
-import { $user } from '../../stores/UserStore';
+import { FormStyles } from '../../../styles/FormStyles';
+import { $user } from '../../../stores/UserStore';
 import {
   $subscription,
   createSubscriptionFx,
   fetchSubscriptionFx,
   fetchSubscriptionsFx,
   updateSubscriptionFx,
-} from '../../stores/SubscriptionStore';
-import { Loader } from '../UI/Loader';
-import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+} from '../../../stores/SubscriptionStore';
+import { MainHeader } from '../../UI/MainHeader';
+import { Loader } from '../../UI/Loader';
+import { UploadImage } from '../../UI/UploadImage';
+import { MainInput } from '../../UI/MainInput';
+import { FormErrorMessage } from '../../UI/FormErrorMessage';
+import { DatePicker } from '../../UI/DatePicker';
+import { ControlColor } from '../../UI/ControlColor';
+import { MainButton } from '../../UI/MainButton';
+import {
+  subscriptionValidationSchema,
+  SubscriptionValidationSchemaType,
+} from './subscriptionValidationSchema';
 
 interface ISubscriptionFormProps {
   subscriptionId?: string;
+  onClose: () => void;
 }
 
 export interface ISubscriptionFormValues {
@@ -39,19 +42,7 @@ export interface ISubscriptionFormValues {
   icon: any;
 }
 
-const createSubscriptionValidationSchema = z.object({
-  name: z.string().min(1, { message: buildRequiredErrorMessage('Name') }),
-  description: z.string(),
-  price: z.number().min(1, { message: buildRequiredErrorMessage('Price') }),
-  pay_date: z.date(),
-  pay_plan: z.string().min(1, { message: buildRequiredErrorMessage('Pay plan') }),
-  color: z.string().min(3, { message: buildRequiredErrorMessage('Color') }),
-  icon: z.any(),
-});
-
-type CreateSubscriptionValidationSchema = z.infer<typeof createSubscriptionValidationSchema>;
-
-export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId }) => {
+export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId, onClose }) => {
   const formTitle = !subscriptionId ? 'Create a subscription' : 'Edit a subscription';
   const formButtonTitle = !subscriptionId ? 'Create' : 'Edit';
 
@@ -77,15 +68,15 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateSubscriptionValidationSchema>({
+  } = useForm<SubscriptionValidationSchemaType>({
     defaultValues: useMemo(
       () => defaultValues(subscriptionId ? subscription : {}),
       [subscription, subscriptionId]
     ),
-    resolver: zodResolver(createSubscriptionValidationSchema),
+    resolver: zodResolver(subscriptionValidationSchema),
   });
 
-  const onSubmit: SubmitHandler<CreateSubscriptionValidationSchema> = async (
+  const onSubmit: SubmitHandler<SubscriptionValidationSchemaType> = async (
     values: ISubscriptionFormValues
   ) => {
     if (!subscriptionId) {
@@ -95,6 +86,7 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
     }
 
     await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
+    onClose();
   };
 
   useEffect(() => {
@@ -103,7 +95,7 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
 
   return (
     <SafeAreaView style={styles.box}>
-      <MainHeader title={formTitle} />
+      <MainHeader title={formTitle} onBack={onClose} />
 
       {isLoading && <Loader />}
 
@@ -240,8 +232,7 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
 const styles = StyleSheet.create({
   box: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 40,
+    padding: 20,
     backgroundColor: '#fff',
   },
   title: {

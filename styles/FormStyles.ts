@@ -13,5 +13,7 @@ export const FormStyles = StyleSheet.create({
   formControl: {
     marginBottom: 20,
   },
-  formActions: {},
+  formActions: {
+    marginBottom: 20,
+  },
 });

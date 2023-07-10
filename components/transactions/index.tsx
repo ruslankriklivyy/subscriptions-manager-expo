@@ -3,9 +3,10 @@ import { FC } from 'react';
 
 import { ITransaction } from '../../types/entities/Transaction';
 import { TransactionItem } from './TransactionItem';
-import { AddTransactionBlock } from './TransactionAddBlock';
 import { Loader } from '../UI/Loader';
 import { EmptyList } from '../UI/EmptyList';
+import { AddButton } from '../UI/AddButton';
+import { useRouter } from 'expo-router';
 
 interface ITransactionsProps {
   transactions: ITransaction[];
@@ -24,6 +25,8 @@ const Transactions: FC<ITransactionsProps> = ({
   onChangePageOffset,
   onDeleteTransaction,
 }) => {
+  const router = useRouter();
+
   const onHandleChangePageOffset = () => {
     if (pagesOffset > transactions?.length) return;
     onChangePageOffset(pagesOffset + 5);
@@ -34,7 +37,15 @@ const Transactions: FC<ITransactionsProps> = ({
       <View style={styles.transactionsTop}>
         <Text style={styles.transactionsTitle}>Transactions</Text>
 
-        {!withoutCreate && <AddTransactionBlock />}
+        {!withoutCreate && (
+          <AddButton
+            onPress={() =>
+              router.push({
+                pathname: '/transactions/createTransaction',
+              })
+            }
+          />
+        )}
       </View>
 
       <FlatList

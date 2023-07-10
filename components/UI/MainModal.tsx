@@ -1,5 +1,5 @@
-import { Modal } from 'react-native';
-import { ReactNode, FC } from 'react';
+import { Modal, Text } from 'react-native';
+import React, { ReactNode, FC } from 'react';
 
 interface IMainModalProps {
   isModalVisible: boolean;
@@ -9,12 +9,7 @@ interface IMainModalProps {
 
 export const MainModal: FC<IMainModalProps> = ({ children, isModalVisible, onClose }) => {
   return (
-    <Modal
-      animationType="slide"
-      visible={isModalVisible}
-      onRequestClose={() => onClose()}
-      presentationStyle={'fullScreen'}
-    >
+    <Modal animationType="slide" visible={isModalVisible} onRequestClose={() => onClose()}>
       {children}
     </Modal>
   );
