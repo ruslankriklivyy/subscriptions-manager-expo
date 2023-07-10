@@ -1,10 +1,11 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { FC } from 'react';
+import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FC, useEffect } from 'react';
 
 import { ITransaction } from '../../types/entities/Transaction';
 import { TransactionItem } from './TransactionItem';
 import { Loader } from '../UI/Loader';
 import { EmptyList } from '../UI/EmptyList';
+import { deleteTransactionFx } from '../../stores/TransactionStore';
 import { AddButton } from '../UI/AddButton';
 import { useRouter } from 'expo-router';
 
@@ -16,6 +17,8 @@ interface ITransactionsProps {
   onChangePageOffset: (pagesOffset: number) => void;
   onDeleteTransaction: (id: string) => void;
 }
+
+const rowTranslateAnimatedValues = {};
 
 const Transactions: FC<ITransactionsProps> = ({
   transactions,
@@ -31,6 +34,14 @@ const Transactions: FC<ITransactionsProps> = ({
     if (pagesOffset > transactions?.length) return;
     onChangePageOffset(pagesOffset + 5);
   };
+
+  useEffect(() => {
+    if (transactions && transactions?.length) {
+      transactions.forEach((transaction) => {
+        rowTranslateAnimatedValues[`${transaction.id}`] = new Animated.Value(1);
+      });
+    }
+  }, [transactions]);
 
   return (
     <View style={styles.transactionsBox}>
