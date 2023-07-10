@@ -11,7 +11,7 @@ import { FormErrorMessage } from '../UI/FormErrorMessage';
 import { DatePicker } from '../UI/DatePicker';
 import { MainButton } from '../UI/MainButton';
 import { MainHeader } from '../UI/MainHeader';
-import { createTransactionFx, fetchTransactionsFx } from '../../stores/TransactionStore';
+import { createTransactionFx } from '../../stores/TransactionStore';
 import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 import { $user } from '../../stores/UserStore';
@@ -72,7 +72,6 @@ export const TransactionAddForm = () => {
       pathname: '/subscriptions/subscription',
       params: { id: subscription.id },
     });
-    // await fetchTransactionsFx({ subscriptionId: subscription.id, offset: 5 });
   };
 
   return (

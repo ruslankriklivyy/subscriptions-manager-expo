@@ -92,8 +92,6 @@ export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId }) => {
         params: { id: subscriptionId },
       });
     }
-
-    // await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
   };
 
   useEffect(() => {
