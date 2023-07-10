@@ -25,10 +25,10 @@ import {
   subscriptionValidationSchema,
   SubscriptionValidationSchemaType,
 } from './subscriptionValidationSchema';
+import { useRouter } from 'expo-router';
 
 interface ISubscriptionFormProps {
   subscriptionId?: string;
-  onClose: () => void;
 }
 
 export interface ISubscriptionFormValues {
@@ -42,10 +42,11 @@ export interface ISubscriptionFormValues {
   icon: any;
 }
 
-export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId, onClose }) => {
+export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId }) => {
   const formTitle = !subscriptionId ? 'Create a subscription' : 'Edit a subscription';
   const formButtonTitle = !subscriptionId ? 'Create' : 'Edit';
 
+  const router = useRouter();
   const user = useStore($user);
   const subscription = useStore($subscription);
   const isLoading = useStore(fetchSubscriptionFx.pending);
@@ -81,12 +82,18 @@ export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId, onClose }) =
   ) => {
     if (!subscriptionId) {
       await createSubscriptionFx({ ...values, user_id: user.id });
+      router.push({
+        pathname: '/home',
+      });
     } else {
       await updateSubscriptionFx({ id: subscriptionId, payload: values });
+      router.push({
+        pathname: '/subscriptions/subscription',
+        params: { id: subscriptionId },
+      });
     }
 
-    await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
-    onClose();
+    // await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
   };
 
   useEffect(() => {
@@ -95,7 +102,7 @@ export const Index: FC<ISubscriptionFormProps> = ({ subscriptionId, onClose }) =
 
   return (
     <SafeAreaView style={styles.box}>
-      <MainHeader title={formTitle} onBack={onClose} />
+      <MainHeader title={formTitle} />
 
       {isLoading && <Loader />}
 

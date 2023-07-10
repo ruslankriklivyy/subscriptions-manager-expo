@@ -16,6 +16,7 @@ import { $subscription } from '../../stores/SubscriptionStore';
 import { ITransactionDateStatistic } from '../../types/entities/Transaction';
 import { $user } from '../../stores/UserStore';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+import { useRouter } from 'expo-router';
 
 export interface ICreateTransactionFormValues {
   date: Date;
@@ -49,6 +50,8 @@ export const TransactionAddForm = () => {
     defaultValues,
     resolver: zodResolver(createTransactionValidationSchema),
   });
+
+  const router = useRouter();
   const subscription = useStore($subscription);
   const user = useStore($user);
   const isCreating = useStore(createTransactionFx.pending);
@@ -65,7 +68,11 @@ export const TransactionAddForm = () => {
         year: moment(values.date).year(),
       },
     });
-    await fetchTransactionsFx({ subscriptionId: subscription.id, offset: 5 });
+    router.push({
+      pathname: '/subscriptions/subscription',
+      params: { id: subscription.id },
+    });
+    // await fetchTransactionsFx({ subscriptionId: subscription.id, offset: 5 });
   };
 
   return (

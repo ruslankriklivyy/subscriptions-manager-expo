@@ -23,6 +23,7 @@ import {
 } from '../../stores/SubscriptionStore';
 import { Loader } from '../UI/Loader';
 import { buildRequiredErrorMessage } from '../../utils/build-required-error-message';
+import { useRouter } from 'expo-router';
 
 interface ISubscriptionFormProps {
   subscriptionId?: string;
@@ -55,6 +56,7 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
   const formTitle = !subscriptionId ? 'Create a subscription' : 'Edit a subscription';
   const formButtonTitle = !subscriptionId ? 'Create' : 'Edit';
 
+  const router = useRouter();
   const user = useStore($user);
   const subscription = useStore($subscription);
   const isLoading = useStore(fetchSubscriptionFx.pending);
@@ -95,6 +97,9 @@ export const SubscriptionForm: FC<ISubscriptionFormProps> = ({ subscriptionId })
     }
 
     await fetchSubscriptionsFx({ userId: user.id, offset: 5, order: 'created_at' });
+    router.push({
+      pathname: '/home',
+    });
   };
 
   useEffect(() => {
